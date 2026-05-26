@@ -1,0 +1,59 @@
+services:
+
+  mongo:
+    image: mongo:latest
+    container_name: bd2-tpo-g10-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+    healthcheck:
+      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    
+  cassandra:
+    image: cassandra:latest
+    container_name: bd2-tpo-g10-cassandra
+    ports:
+      - "9042:9042"
+    volumes:
+      - cassandra_data:/data/db
+    environment:
+      - CASSANDRA_USER=${CASSANDRA_USER}
+      - CASSANDRA_PASSWORD=${CASSANDRA_PASSWORD}
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "SELECT 1 FROM system.local"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+
+  api:
+    build:
+      context: ./api
+      dockerfile: Dockerfile
+    container_name: bd2-tpo-g10-api
+    ports:
+      - "8000:8000"
+    environment:
+      - MONGO_URI=${MONGO_URI}
+      - CASSANDRA_URI=${CASSANDRA_URI}
+    depends_on:
+      mongo:
+        condition: service_healthy
+      cassandra:
+        condition: service_healthy
+
+volumes:
+  mongo_data:
+    driver: local
+    name: bd2-tpo-g10-mongo
+  cassandra_data:
+    driver: local
+    name: bd2-tpo-g10-cassandra

@@ -12,4 +12,10 @@
 
 ## Instrucciones de ejecución
 
-TODO
+Para ejecutar el proyecto es necesario contar con [Docker Engine](https://docs.docker.com/engine/install/) y [Docker Compose](https://docs.docker.com/compose/install/) instalados.
+
+Una vez instalados, ejecutar el siguiente comando en la raíz del proyecto:
+
+```bash
+docker-compose up -d --build
+```

@@ -1,0 +1,12 @@
+{
+  "name": "bd2-tpo-api",
+  "version": "1.0.0",
+  "description": "Express API for BD2 TPO",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.19.2"
+  }
+}
