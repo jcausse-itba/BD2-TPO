@@ -7,8 +7,8 @@
 ## Grupo 10
 
 * **61105**: **Causse**, Juan Ignacio
-* **XXXXX**: **Liu**, Javier
-* **XXXXX**: **Rivas**, Nicolás
+* **64332**: **Liu**, Javier
+* **64292**: **Rivas**, Nicolás
 
 ## Instrucciones de ejecución
 
