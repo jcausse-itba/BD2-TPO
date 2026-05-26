@@ -4,8 +4,6 @@
 <h1 align="center">Base de Datos 2</h1>
 <h2 align="center">Trabajo Práctico Obligatorio</h2>
 
----
-
 ## Grupo 10
 
 * **61105**: **Causse**, Juan Ignacio
