@@ -254,7 +254,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
-.env
+# .env # Explicitly allowed, as it only contains dummy values
 .venv
 env/
 venv/
