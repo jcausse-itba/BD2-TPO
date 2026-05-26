@@ -1,2 +1,18 @@
-# BD2-TPO
-Base de Datos II - Trabajo Práctico Obligatorio - 1C 2026
+<p align="center">
+  <img src="https://github.com/jcausse-itba/BD2-TPO/blob/main/assets/itba_logo.png?raw=true" height="120"/>
+</p>
+<h1 align="center">Base de Datos 2</h1>
+<h2 align="center">Trabajo Práctico Obligatorio</h2>
+
+---
+
+## Grupo 10
+
+* **61105**: **Causse**, Juan Ignacio
+* **XXXXX**: **Liu**, Javier
+* **XXXXX**: **Rivas**, Nicolás
+
+## Instrucciones de ejecución
+
+TODO
+
