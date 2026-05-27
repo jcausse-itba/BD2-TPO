@@ -1,7 +1,24 @@
 const express = require('express')
+const cassandra = require('cassandra-driver');
 const mongoose = require('mongoose');
 
-mongoose.connect(process.env.MONGO_URI);
+const cassandraClient = new cassandra.Client({
+    contactPoints: [process.env.CASSANDRA_HOST || 'localhost'],
+    localDataCenter: process.env.CASSANDRA_DC || 'datacenter1',
+    keyspace: process.env.CASSANDRA_KEYSPACE,
+    credentials: {
+        username: process.env.CASSANDRA_USER || 'cassandra',
+        password: process.env.CASSANDRA_PASSWORD || 'cassandra'
+    }
+});
+
+cassandraClient.connect()
+    .then(() => {})
+    .catch((err) => console.error('Cassandra connection error:', err))
+
+mongoose.connect(process.env.MONGO_URI)
+    .then(() => {})
+    .catch((err) => console.error('Cassandra MongoDB error:', err))
 
 const app = express()
 
