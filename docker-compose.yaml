@@ -12,7 +12,7 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
     healthcheck:
-      test: ["CMD", "mongo", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
       interval: 10s
       timeout: 5s
       retries: 5
@@ -24,15 +24,16 @@ services:
     ports:
       - "9042:9042"
     volumes:
-      - cassandra_data:/data/db
+      - cassandra_data:/var/lib/cassandra
     environment:
       - CASSANDRA_USER=${CASSANDRA_USER}
       - CASSANDRA_PASSWORD=${CASSANDRA_PASSWORD}
     healthcheck:
-      test: ["CMD", "cqlsh", "-e", "SELECT 1 FROM system.local"]
+      test: ["CMD-SHELL", "nodetool status | grep -q '^UN'"]
       interval: 10s
       timeout: 5s
       retries: 5
+      start_period: 60s
 
   api:
     build:
@@ -44,6 +45,11 @@ services:
     environment:
       - MONGO_URI=${MONGO_URI}
       - CASSANDRA_URI=${CASSANDRA_URI}
+      - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
+      - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
+      - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
+      - CASSANDRA_USER=${CASSANDRA_USER}
+      - CASSANDRA_PASSWORD=${CASSANDRA_PASSWORD}
     depends_on:
       mongo:
         condition: service_healthy
