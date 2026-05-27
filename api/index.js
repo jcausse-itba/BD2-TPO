@@ -62,3 +62,119 @@ app.get('/query1', async (req, res) => {
 app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
+
+/* QUERy 2
+db.consultas.aggregate([
+  {
+    $lookup: {
+      from: "veterinarios",
+      localField: "id_vet",
+      foreignField: "id_vet",
+      as: "veterinario"
+    }
+  },
+  { $unwind: "$veterinario" },
+  {
+    $match: { estado: "Seguimiento" }
+  },
+]);
+* */
+
+// QUERY 3 no tuve ganas de hacerlo. quiza lo mandamos a cassandra.
+
+/* QUERY 4
+db.propietarios.aggregate([
+  {
+    $lookup: {
+      from: "pacientes",
+      localField: "id_propietario",
+      foreignField: "id_propietario",
+      as: "paciente"
+    }
+  },
+  {
+    $match: {
+      $expr: {
+        $gt: [
+          { $size: "$paciente" },
+          1
+        ]
+      }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      nombre: 1,
+      apellido: 1,
+      //"paciente.nombre": 1,
+    }
+  }
+]);
+* */
+
+/* Query 5
+db.consultas.aggregate([
+  {
+    $match: {
+      $expr: {
+        $gte: [
+          "$fecha",
+          {
+            $dateSubtract: {
+              startDate: "$$NOW",
+              unit: "day",
+              amount: 60
+            }
+          }
+        ]
+      }
+    }
+  },
+  {
+    $group: {
+     _id: "$id_vet",
+      total: { $sum: 1 }
+    }
+  },
+  {
+    $lookup: {
+      from: "veterinarios",
+      localField: "_id",
+      foreignField: "id_vet",
+      as: "veterinario"
+    }
+  },
+  { $unwind: "$veterinario" },
+  {
+    $match: { "veterinario.activo": true }
+  },
+]);
+* */
+
+
+/* Query 7: Top 5 diagnósticos más frecuentes
+db.consultas.aggregate([
+  {
+    $group: {
+      _id: "$diagnostico",
+      cantidad: { $sum: 1 }
+    }
+  },
+  {
+    $project: {
+      diagnostico: "$_id",
+      cantidad: 1,
+      _id: 0,
+    }
+  },
+  {
+    $sort: {
+      cantidad: -1
+    }
+  },
+  {
+    $limit: 5
+  }
+]);
+* */
