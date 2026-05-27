@@ -59,6 +59,17 @@ app.get('/query1', async (req, res) => {
     ]).toArray());
 })
 
+app.get('/stock', async (req, res) => { //TODO temporal test query
+    try {
+        res.json((await cassandraClient.execute(
+            `SELECT *FROM "${process.env.CASSANDRA_KEYSPACE}".stock_farmaceutico;`)
+            ).rows);
+    } catch (err) {
+        console.error('Error executing Cassandra query:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
 app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
