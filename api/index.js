@@ -12,6 +12,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/query1', async (req, res) => {
+    /* Pacientes activos con todos sus datos de propietario */
     res.send(await mongoose.connection.db.collection('pacientes').aggregate([
         {
             $lookup: {
