@@ -37,6 +37,23 @@ services:
       retries: 5
       start_period: 60s
 
+  cassandra-init:
+    image: cassandra:latest
+    container_name: bd2-tpo-g10-cassandra-init
+    volumes:
+      - ./example_datasets:/example_datasets:ro
+      - ./init-cassandra.sh:/init-cassandra.sh:ro
+      - cassandra_data:/cassandra_data
+    environment:
+      - CASSANDRA_HOST=${CASSANDRA_HOST}
+      - CASSANDRA_USER=${CASSANDRA_USER}
+      - CASSANDRA_PASSWORD=${CASSANDRA_PASSWORD}
+      - CASSANDRA_KEYSPACE=${CASSANDRA_KEYSPACE}
+    entrypoint: ["/bin/bash", "/init-cassandra.sh"]
+    depends_on:
+      cassandra:
+        condition: service_healthy
+
   api:
     build:
       context: ./api
@@ -46,17 +63,19 @@ services:
       - "8000:8000"
     environment:
       - MONGO_URI=${MONGO_URI}
-      - CASSANDRA_URI=${CASSANDRA_URI}
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
       - CASSANDRA_USER=${CASSANDRA_USER}
       - CASSANDRA_PASSWORD=${CASSANDRA_PASSWORD}
+      - CASSANDRA_HOST=${CASSANDRA_HOST}
+      - CASSANDRA_DC=${CASSANDRA_DC}
+      - CASSANDRA_KEYSPACE=${CASSANDRA_KEYSPACE}
     depends_on:
       mongo:
         condition: service_healthy
-      cassandra:
-        condition: service_healthy
+      cassandra-init:
+        condition: service_completed_successfully
 
 volumes:
   mongo_data:
