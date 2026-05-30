@@ -59,6 +59,25 @@ app.get('/query1', async (req, res) => {
     ]).toArray());
 })
 
+
+// TODO: preguntar si las id's usamos la del dataset (ej: id_vet, id_propietario) o las sacamos y usamos las de mongo.
+app.get('/query2', async (req, res) => {
+    res.send(await mongoose.connection.db.collection('consultas').aggregate([
+            {
+                $lookup: {
+                    from: "veterinarios",
+                    localField: "id_vet",
+                    foreignField: "id_vet",
+                    as: "veterinario"
+                }
+            },
+            { $unwind: "$veterinario" },
+            {
+                $match: { estado: "Seguimiento" }
+            },
+        ]).toArray());
+})
+
 app.get('/stock', async (req, res) => { //TODO temporal test query
     try {
         res.json((await cassandraClient.execute(
@@ -74,23 +93,6 @@ app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
 
-// TODO: preguntar si las id's usamos la del dataset (ej: id_vet, id_propietario) o las sacamos y usamos las de mongo.
-/* QUERy 2
-db.consultas.aggregate([
-  {
-    $lookup: {
-      from: "veterinarios",
-      localField: "id_vet",
-      foreignField: "id_vet",
-      as: "veterinario"
-    }
-  },
-  { $unwind: "$veterinario" },
-  {
-    $match: { estado: "Seguimiento" }
-  },
-]);
-* */
 
 /** QUERY 3: Historial completo de un paciente: consultas y vacunaciones ordenadas por fecha 
 // TODO: preguntar si esta bien usar $unionWith
