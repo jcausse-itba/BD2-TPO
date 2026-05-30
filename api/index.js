@@ -452,7 +452,7 @@ db.propietarios.aggregate([
 /* Query 13: ABM completo de propietarios: alta, modificación de datos, baja lógica
 // no es de obtener datos, sino que es de eliminar, modificar o subir datos. y poner ejemplos.
 
-// alta. id mayor que el actual.
+// alta. TODO: id mayor que el actual deberia ser determinado automaticamente?
 db.propietarios.insertOne({
     id_propietario: "C017",
     nombre: "Lola",
