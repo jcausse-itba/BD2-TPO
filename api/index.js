@@ -78,6 +78,58 @@ app.get('/query2', async (req, res) => {
         ]).toArray());
 })
 
+
+app.get('/query3', async (req, res) => {
+    /** QUERY 3: Historial completo de un paciente: consultas y vacunaciones ordenadas por fecha*/
+    // TODO: preguntar si esta bien usar $unionWith
+    // vendria bien hacerlo en cassandra sino. porque "hay muchas consultas seguro, muchos datos!!"
+    res.send(await mongoose.connection.db.collection('consultas').aggregate([
+        {
+            $match: {
+                id_paciente: "P001"
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                fecha: 1,
+                tipo: { $literal: "Consulta" },
+                detalle: "$motivo",
+                diagnostico: 1,
+                veterinario: "$id_vet"
+            }
+        },
+        {
+            $unionWith: {
+                coll: "vacunas",
+                pipeline: [
+                    {
+                        $match: {
+                            id_paciente: "P001"
+                        }
+                    },
+                    {
+                        $project: {
+                            _id: 0,
+                            fecha: "$fecha_aplicacion",
+                            tipo: { $literal: "Vacunación" },
+                            detalle: "$nombre_vacuna",
+                            proxima_dosis: 1,
+                            veterinario: "$id_vet"
+                        }
+                    }
+                ]
+            }
+        },
+        {
+            $sort: {
+                fecha: 1
+            }
+        }
+    ]).toArray());
+})
+
+
 app.get('/stock', async (req, res) => { //TODO temporal test query
     try {
         res.json((await cassandraClient.execute(
@@ -92,56 +144,6 @@ app.get('/stock', async (req, res) => { //TODO temporal test query
 app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
-
-
-/** QUERY 3: Historial completo de un paciente: consultas y vacunaciones ordenadas por fecha 
-// TODO: preguntar si esta bien usar $unionWith
-// vendria bien hacerlo en cassandra sino. porque "hay muchas consultas seguro, muchos datos!!"
-db.consultas.aggregate([
-  {
-    $match: {
-      id_paciente: "P001"
-    }
-  },
-  {
-    $project: {
-      _id: 0,
-      fecha: 1,
-      tipo: { $literal: "Consulta" },
-      detalle: "$motivo",
-      diagnostico: 1,
-      veterinario: "$id_vet"
-    }
-  },
-  {
-    $unionWith: {
-      coll: "vacunas",
-      pipeline: [
-        {
-          $match: {
-            id_paciente: "P001"
-          }
-        },
-        {
-          $project: {
-            _id: 0,
-            fecha: "$fecha_aplicacion",
-            tipo: { $literal: "Vacunación" },
-            detalle: "$nombre_vacuna",
-            proxima_dosis: 1,
-            veterinario: "$id_vet"
-          }
-        }
-      ]
-    }
-  },
-  {
-    $sort: {
-      fecha: 1
-    }
-  }
-])
- */
 
 
 /* QUERY 4: Propietarios con más de un paciente registrado.
