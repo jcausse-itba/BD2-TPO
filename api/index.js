@@ -41,7 +41,7 @@ app.get('/query1', async (req, res) => {
         },
         { $unwind: "$propietario" },
         {
-            $match: { activo: true }
+            $match: { activo: "True" }
         },
         {
             $project: {
