@@ -130,6 +130,39 @@ app.get('/query3', async (req, res) => {
 })
 
 
+app.get('/query4', async (req, res) => {
+    /* QUERY 4: Propietarios con más de un paciente registrado.*/
+    res.send(await mongoose.connection.db.collection('propietarios').aggregate([
+        {
+            $lookup: {
+                from: "pacientes",
+                localField: "id_propietario",
+                foreignField: "id_propietario",
+                as: "paciente"
+            }
+        },
+        {
+            $match: {
+                $expr: {
+                    $gt: [
+                        { $size: "$paciente" },
+                        1
+                    ]
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                nombre: 1,
+                apellido: 1,
+                //"paciente.nombre": 1,
+            }
+        }
+    ]).toArray());
+})
+
+
 app.get('/stock', async (req, res) => { //TODO temporal test query
     try {
         res.json((await cassandraClient.execute(
@@ -146,36 +179,6 @@ app.listen(port, () => {
 })
 
 
-/* QUERY 4: Propietarios con más de un paciente registrado.
-db.propietarios.aggregate([
-  {
-    $lookup: {
-      from: "pacientes",
-      localField: "id_propietario",
-      foreignField: "id_propietario",
-      as: "paciente"
-    }
-  },
-  {
-    $match: {
-      $expr: {
-        $gt: [
-          { $size: "$paciente" },
-          1
-        ]
-      }
-    }
-  },
-  {
-    $project: {
-      _id: 0,
-      nombre: 1,
-      apellido: 1,
-      //"paciente.nombre": 1,
-    }
-  }
-]);
-* */
 
 /* Query 5: eterinarios activos y cantidad de consultas realizadas en los últimos 60 días
 db.consultas.aggregate([
