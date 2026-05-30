@@ -7,3 +7,23 @@ CON005,P005,V005,2025-11-10,Vómitos recurrentes,Gastritis,5500,Seguimiento
 CON006,P006,V003,2025-11-18,Revisión piel,Eccema,4100,Cerrada
 CON007,P001,V001,2025-12-02,Control post-vacuna,Sin novedades,2000,Cerrada
 CON008,P007,V002,2025-12-10,Extracción dentaria,Periodontitis,12000,Cerrada
+CON009,P001,V006,2026-05-30,Control anual,Sano,5000,Cerrada
+CON010,P002,V007,2026-05-30,Vacunación,Eccema,3500,Cerrada
+CON011,P003,V008,2026-05-31,Dolor pata,Esguince,8000,Seguimiento
+CON012,P004,V009,2026-05-31,Control dental,Sarro,7000,Cerrada
+CON013,P005,V010,2026-06-01,Vómitos,Gastritis,5500,Seguimiento
+CON014,P006,V011,2026-06-01,Control piel,Eccema,4200,Cerrada
+CON015,P007,V012,2026-06-02,Control anual,Sano,4500,Cerrada
+CON016,P008,V013,2026-06-02,Alergia,Skill issue,6200,Cerrada
+CON017,P001,V014,2026-06-03,Tos persistente,Bronquitis,7800,Seguimiento
+CON018,P002,V015,2026-06-03,Control ocular,Conjuntivitis,3900,Cerrada
+CON019,P003,V006,2026-06-04,Revisión postoperatoria,Evolución favorable,5200,Cerrada
+CON020,P004,V007,2026-06-04,Pérdida de apetito,Estrés ambiental,4100,Seguimiento
+CON021,P005,V008,2026-06-05,Control anual,Sano,4500,Cerrada
+CON022,P006,V009,2026-06-05,Vacunación,Estrés ambiental,3500,Cerrada
+CON023,P007,V010,2026-06-05,Dolor abdominal,Gastritis,6500,Seguimiento
+CON024,P008,V011,2026-06-05,Control dental,Sarro,7200,Cerrada
+CON025,P001,V012,2026-06-06,Control piel,Dermatitis,4300,Cerrada
+CON026,P002,V013,2026-06-06,Control anual,Sano,4500,Cerrada
+CON027,P003,V014,2026-06-06,Revisión general,Gastritis,3000,Cerrada
+CON028,P004,V015,2026-06-06,Control postoperatorio,Evolución favorable,5800,Cerrada

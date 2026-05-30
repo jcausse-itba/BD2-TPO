@@ -29,7 +29,7 @@ app.get('/', (req, res) => {
 })
 
 app.get('/query1', async (req, res) => {
-    /* Pacientes activos con todos sus datos de propietario */
+    /* Pacientes activos con la totalidad de sus datos de propietario */
     res.send(await mongoose.connection.db.collection('pacientes').aggregate([
         {
             $lookup: {
@@ -74,6 +74,7 @@ app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
 
+// TODO: preguntar si las id's usamos la del dataset (ej: id_vet, id_propietario) o las sacamos y usamos las de mongo.
 /* QUERy 2
 db.consultas.aggregate([
   {
@@ -141,7 +142,7 @@ db.consultas.aggregate([
  */
 
 
-/* QUERY 4
+/* QUERY 4: Propietarios con más de un paciente registrado.
 db.propietarios.aggregate([
   {
     $lookup: {
@@ -172,7 +173,7 @@ db.propietarios.aggregate([
 ]);
 * */
 
-/* Query 5
+/* Query 5: eterinarios activos y cantidad de consultas realizadas en los últimos 60 días
 db.consultas.aggregate([
   {
     $match: {
@@ -212,7 +213,6 @@ db.consultas.aggregate([
 * */
 
 /* Query 6:  Pacientes con vacunas vencidas (próxima dosis anterior a hoy)
-// TODO. agregar datos para que la query no quere vacia.
 db.vacunas.aggregate([
   {
     $match: {
@@ -310,7 +310,7 @@ db.consultas.find(
 )
 */
 
-/* Query 10: Todos los pacientes de una sucursal determinada (a través del veterinario
+/* Query 10: los pacientes de una sucursal determinada (a través del veterinario
 let sucursal = "Palermo";  // Debe ser parametrizable la sucursal.
 db.consultas.aggregate([
   {
@@ -355,7 +355,7 @@ db.consultas.aggregate([
 */
 
 /** Query 11: Vista agregada: ingresos totales por veterinario en el mes actual
-// TODO: agregar datos que estan en el mes actual para que no de vacio
+
 db.createView(
   "vw_ingresos_veterinario_mes_actual",
   "consultas",
@@ -452,13 +452,13 @@ db.propietarios.aggregate([
 /* Query 13: ABM completo de propietarios: alta, modificación de datos, baja lógica
 // no es de obtener datos, sino que es de eliminar, modificar o subir datos. y poner ejemplos.
 
-// alta
+// alta. id mayor que el actual.
 db.propietarios.insertOne({
-    id_propietario: "C007",
-    nombre: "Lucía",
-    apellido: "Pérez",
+    id_propietario: "C017",
+    nombre: "Lola",
+    apellido: "Gonzales",
     dni: 40111222,
-    email: "lucia@gmail.com",
+    email: "lola@gmail.com",
     telefono: "1112345678",
     ciudad: "Mar del Plata",
     provincia: "Buenos Aires",
