@@ -91,7 +91,55 @@ db.consultas.aggregate([
 ]);
 * */
 
-// QUERY 3 no tuve ganas de hacerlo. quiza lo mandamos a cassandra.
+/** QUERY 3: Historial completo de un paciente: consultas y vacunaciones ordenadas por fecha 
+// TODO: preguntar si esta bien usar $unionWith
+// vendria bien hacerlo en cassandra sino. porque "hay muchas consultas seguro, muchos datos!!"
+db.consultas.aggregate([
+  {
+    $match: {
+      id_paciente: "P001"
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      fecha: 1,
+      tipo: { $literal: "Consulta" },
+      detalle: "$motivo",
+      diagnostico: 1,
+      veterinario: "$id_vet"
+    }
+  },
+  {
+    $unionWith: {
+      coll: "vacunas",
+      pipeline: [
+        {
+          $match: {
+            id_paciente: "P001"
+          }
+        },
+        {
+          $project: {
+            _id: 0,
+            fecha: "$fecha_aplicacion",
+            tipo: { $literal: "Vacunación" },
+            detalle: "$nombre_vacuna",
+            proxima_dosis: 1,
+            veterinario: "$id_vet"
+          }
+        }
+      ]
+    }
+  },
+  {
+    $sort: {
+      fecha: 1
+    }
+  }
+])
+ */
+
 
 /* QUERY 4
 db.propietarios.aggregate([
@@ -163,6 +211,42 @@ db.consultas.aggregate([
 ]);
 * */
 
+/* Query 6:  Pacientes con vacunas vencidas (próxima dosis anterior a hoy)
+// TODO. agregar datos para que la query no quere vacia.
+db.vacunas.aggregate([
+  {
+    $match: {
+      proxima_dosis: {
+        $lt: new Date()
+      }
+    }
+  },
+  {
+    $group: {
+      _id: "$id_paciente"
+    }
+  },
+  {
+    $lookup: {
+      from: "pacientes",
+      localField: "_id",
+      foreignField: "id_paciente",
+      as: "paciente"
+    }
+  },
+  {
+    $unwind: "$paciente"
+  },
+  {
+    $project: {
+      _id: 0,
+      id_paciente: "$paciente.id_paciente",
+      nombre: "$paciente.nombre",
+      especie: "$paciente.especie"
+    }
+  }
+])
+*/
 
 /* Query 7: Top 5 diagnósticos más frecuentes
 db.consultas.aggregate([
@@ -189,3 +273,249 @@ db.consultas.aggregate([
   }
 ]);
 * */
+
+/* Query 8: Stock de productos con menos de 50 unidades y su proveedor.
+// TODO: este dijimos que lo ibamos a hacer en Cassandra. asi que podemos descartarlo.
+db.productos.find(
+  {
+    unidades: { $lt: 50 }
+  },
+  {
+    _id: 0,
+    nombre: 1,
+    unidades: 1,
+    proveedor: 1
+  }
+)
+*/
+
+/* Query 9: Consultas de tipo 'Control' con costo menor a $5.000
+db.consultas.find(
+  {
+    motivo: {
+      $regex: "Control"
+    },
+    costo: {
+      $lt: 5000
+    }
+  }, 
+  {
+    _id: 0,
+    fecha: 1,
+    motivo: 1,
+    diagnostico: 1,
+    costo: 1,
+    estado: 1
+  }
+)
+*/
+
+/* Query 10: Todos los pacientes de una sucursal determinada (a través del veterinario
+let sucursal = "Palermo";  // Debe ser parametrizable la sucursal.
+db.consultas.aggregate([
+  {
+    $lookup: {
+      from: "veterinarios",
+      localField: "id_vet",
+      foreignField: "id_vet",
+      as: "vet"
+    }
+  },
+  { $unwind: "$vet" },
+  {
+    $match: {
+      "vet.sucursal": sucursal
+    }
+  },
+  {
+    $group: {
+      _id: "$id_paciente"
+    }
+  },
+  {
+    $lookup: {
+      from: "pacientes",
+      localField: "_id",
+      foreignField: "id_paciente",
+      as: "paciente"
+    }
+  },
+  { $unwind: "$paciente" },
+  {
+    $project: {
+      _id: 0,
+      id_paciente: "$paciente.id_paciente",
+      nombre: "$paciente.nombre",
+      especie: "$paciente.especie",
+      raza: "$paciente.raza",
+      activo: "$paciente.activo"
+    }
+  }
+])
+*/
+
+/** Query 11: Vista agregada: ingresos totales por veterinario en el mes actual
+// TODO: agregar datos que estan en el mes actual para que no de vacio
+db.createView(
+  "vw_ingresos_veterinario_mes_actual",
+  "consultas",
+  [
+    {
+      $match: {
+        $expr: {
+          $and: [
+            { $eq: [ { $year: "$fecha" }, { $year: "$$NOW" } ] },
+            { $eq: [ { $month: "$fecha" }, { $month: "$$NOW" } ] }
+          ]
+        }
+      }
+    },
+    {
+      $group: {
+        _id: "$id_vet",
+        ingresos_totales: { $sum: "$costo" },
+        cantidad_consultas: { $sum: 1 }
+      }
+    },
+    {
+      $lookup: {
+        from: "veterinarios",
+        localField: "_id",
+        foreignField: "id_vet",
+        as: "veterinario"
+      }
+    },
+    {
+      $unwind: "$veterinario"
+    },
+    {
+      $project: {
+        _id: 0,
+        id_vet: "$veterinario.id_vet",
+        nombre: "$veterinario.nombre",
+        apellido: "$veterinario.apellido",
+        sucursal: "$veterinario.sucursal",
+        ingresos_totales: 1,
+        cantidad_consultas: 1
+      }
+    }
+  ]
+);
+db.vw_ingresos_veterinario_mes_actual.find();
+ */
+
+/** Query 12: Propietarios sin consultas registradas en el último año
+
+db.propietarios.aggregate([
+  {
+    $lookup: {
+      from: "pacientes",
+      localField: "id_propietario",
+      foreignField: "id_propietario",
+      as: "pacientes"
+    }
+  },
+  {
+    $lookup: {
+      from: "consultas",
+      localField: "pacientes.id_paciente",
+      foreignField: "id_paciente",
+      as: "consultas"
+    }
+  },
+  {
+    $match: {
+      consultas: {
+        $not: {
+          $elemMatch: {
+            fecha: {
+              $gte: new Date(
+                new Date().setFullYear(new Date().getFullYear() - 1)
+              )
+            }
+          }
+        }
+      }
+    }
+  },
+  {
+    $project: {
+      _id: 0,
+      id_propietario: 1,
+      nombre: 1,
+      apellido: 1
+    }
+  }
+])
+ */
+
+/* Query 13: ABM completo de propietarios: alta, modificación de datos, baja lógica
+// no es de obtener datos, sino que es de eliminar, modificar o subir datos. y poner ejemplos.
+
+// alta
+db.propietarios.insertOne({
+    id_propietario: "C007",
+    nombre: "Lucía",
+    apellido: "Pérez",
+    dni: 40111222,
+    email: "lucia@gmail.com",
+    telefono: "1112345678",
+    ciudad: "Mar del Plata",
+    provincia: "Buenos Aires",
+    activo: true
+})
+
+// modificacion
+db.propietarios.updateOne(
+    { id_propietario: "C007" },
+    {
+        $set: {
+            email: "lucia.perez@gmail.com",
+            telefono: "1199998888"
+        }
+    }
+)
+
+// baja logica: asumimos que es poner "activo" en false.
+db.propietarios.updateOne(
+    { id_propietario: "C007" },
+    {
+        $set: {
+            activo: false
+        }
+    }
+)
+
+*/
+
+/* Query 14: Registro de nueva consulta médica con validación de paciente y veterinario existentes.
+// TODO: preguntar si esta bien validar con 'if'. o como se debeiria hacer en mongo.
+// sino, entonces lo hacemos en Cassandra si hay algo como RIRs.
+
+const paciente = db.pacientes.findOne({
+    id_paciente: "P001",
+    activo: true
+});
+
+const veterinario = db.veterinarios.findOne({
+    id_vet: "V001",
+    activo: true
+});
+
+if (paciente && veterinario) {
+    db.consultas.insertOne({
+        id_consulta: "CON009",
+        id_paciente: "P001",
+        id_vet: "V001",
+        fecha: new Date(),
+        motivo: "Control general",
+        diagnostico: "En observación",
+        costo: 5000,
+        estado: "Seguimiento"
+    });
+} else {
+    print("Paciente o veterinario inexistente/inactivo");
+}
+*/
+
+// Query 15. se lo dejamos a casandra.
