@@ -23,6 +23,7 @@ mongoose.connect(process.env.MONGO_URI)
     .catch((err) => console.error('Cassandra MongoDB error:', err))
 
 const app = express()
+app.use(express.json())
 
 const port = process.env.PORT || 3000
 
@@ -427,28 +428,59 @@ app.get('/query12', async (req, res) => {
     ]).toArray());
 })
 
+/* Query 13: ABM completo de propietarios: alta, modificación de datos, baja lógica*/
+// no es de obtener datos, sino que es de eliminar, modificar o subir datos. y poner ejemplos.
+app.post('/query13', async (req, res) => {
+    // alta. TODO: id mayor que el actual deberia ser determinado automaticamente?
+    const { id_propietario, nombre, apellido, dni, email, telefono, ciudad, provincia } = req.body;
+    const validationRules = [
+        { name: 'id_propietario', type: 'string' },
+        { name: 'nombre', type: 'string' },
+        { name: 'apellido', type: 'string' },
+        { name: 'dni', type: 'number' },
+        { name: 'email', type: 'string' },
+        { name: 'telefono', type: 'number' },
+        { name: 'ciudad', type: 'string' },
+        { name: 'provincia', type: 'string' }
+    ];
+    for (const rule of validationRules) {
+        const value = req.body[rule.name];
+        if (value === undefined || value === null || value === '') {
+            return res.status(400).json({
+                error: `Bad Request: El campo '${rule.name}' es obligatorio y no puede estar vacío.`
+            });
+        }
+        if (typeof value !== rule.type) {
+            return res.status(400).json({
+                error: `Bad Request: El campo '${rule.name}' debe ser de tipo [${rule.type}]. Se recibió [${typeof value}].`
+            });
+        }
+    }
+
+    try {
+        await mongoose.connection.db.collection('propietarios').insertOne({
+            id_propietario: id_propietario,
+            nombre: nombre,
+            apellido: apellido,
+            dni: dni,
+            email: email,
+            telefono: telefono,
+            ciudad: ciudad,
+            provincia: provincia
+        })
+        res.status(201).json({ message: "Propietario creado con éxito" });
+    } catch (err) {
+        console.error('Error en Alta de Propietario:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
 
 app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
 
 
-/* Query 13: ABM completo de propietarios: alta, modificación de datos, baja lógica
-// no es de obtener datos, sino que es de eliminar, modificar o subir datos. y poner ejemplos.
-
-// alta. TODO: id mayor que el actual deberia ser determinado automaticamente?
-db.propietarios.insertOne({
-    id_propietario: "C017",
-    nombre: "Lola",
-    apellido: "Gonzales",
-    dni: 40111222,
-    email: "lola@gmail.com",
-    telefono: "1112345678",
-    ciudad: "Mar del Plata",
-    provincia: "Buenos Aires",
-    activo: true
-})
-
+/* 
 // modificacion
 db.propietarios.updateOne(
     { id_propietario: "C007" },
