@@ -374,60 +374,17 @@ app.get('/query10', async (req, res) => {
         ]).toArray());
 });
 
+
+app.get('/query11', async (req, res) => {
+    /** Query 11: Vista agregada: ingresos totales por veterinario en el mes actual*/
+    res.send(await mongoose.connection.db.collection('vw_ingresos_veterinario_mes_actual').find(
+    ).toArray());
+});
+
 app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
 
-
-/** Query 11: Vista agregada: ingresos totales por veterinario en el mes actual
-
-db.createView(
-  "vw_ingresos_veterinario_mes_actual",
-  "consultas",
-  [
-    {
-      $match: {
-        $expr: {
-          $and: [
-            { $eq: [ { $year: "$fecha" }, { $year: "$$NOW" } ] },
-            { $eq: [ { $month: "$fecha" }, { $month: "$$NOW" } ] }
-          ]
-        }
-      }
-    },
-    {
-      $group: {
-        _id: "$id_vet",
-        ingresos_totales: { $sum: "$costo" },
-        cantidad_consultas: { $sum: 1 }
-      }
-    },
-    {
-      $lookup: {
-        from: "veterinarios",
-        localField: "_id",
-        foreignField: "id_vet",
-        as: "veterinario"
-      }
-    },
-    {
-      $unwind: "$veterinario"
-    },
-    {
-      $project: {
-        _id: 0,
-        id_vet: "$veterinario.id_vet",
-        nombre: "$veterinario.nombre",
-        apellido: "$veterinario.apellido",
-        sucursal: "$veterinario.sucursal",
-        ingresos_totales: 1,
-        cantidad_consultas: 1
-      }
-    }
-  ]
-);
-db.vw_ingresos_veterinario_mes_actual.find();
- */
 
 /** Query 12: Propietarios sin consultas registradas en el último año
 
