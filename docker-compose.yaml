@@ -53,6 +53,7 @@ services:
     depends_on:
       cassandra:
         condition: service_healthy
+    restart: on-failure
 
   api:
     build:

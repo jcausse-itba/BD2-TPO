@@ -1,4 +1,6 @@
 #!/bin/bash
+set -e
+
 DATASET_DIR="/example_datasets"
 
 declare -A COLLECTIONS
