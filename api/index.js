@@ -163,6 +163,52 @@ app.get('/query4', async (req, res) => {
 })
 
 
+app.get('/query5', async (req, res) => {
+    /* Query 5: eterinarios activos y cantidad de consultas realizadas en los últimos 60 días*/
+    res.send(await mongoose.connection.db.collection('consultas').aggregate([
+        {
+            $match: {
+                $expr: {
+                    $gte: [
+                        "$fecha",
+                        {
+                            $dateToString: {
+                                format: "%Y-%m-%d",
+                                date: {
+                                    $dateSubtract: {
+                                        startDate: "$$NOW",
+                                        unit: "day",
+                                        amount: 60
+                                    }
+                                }
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            $group: {
+                _id: "$id_vet",
+                total: { $sum: 1 }
+            }
+        },
+        {
+            $lookup: {
+                from: "veterinarios",
+                localField: "_id",
+                foreignField: "id_vet",
+                as: "veterinario"
+            }
+        },
+        { $unwind: "$veterinario" },
+        {
+            $match: { "veterinario.activo": "True" }
+        },
+    ]).toArray());
+})
+
+
 app.get('/stock', async (req, res) => { //TODO temporal test query
     try {
         res.json((await cassandraClient.execute(
@@ -178,46 +224,6 @@ app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
 
-
-
-/* Query 5: eterinarios activos y cantidad de consultas realizadas en los últimos 60 días
-db.consultas.aggregate([
-  {
-    $match: {
-      $expr: {
-        $gte: [
-          "$fecha",
-          {
-            $dateSubtract: {
-              startDate: "$$NOW",
-              unit: "day",
-              amount: 60
-            }
-          }
-        ]
-      }
-    }
-  },
-  {
-    $group: {
-     _id: "$id_vet",
-      total: { $sum: 1 }
-    }
-  },
-  {
-    $lookup: {
-      from: "veterinarios",
-      localField: "_id",
-      foreignField: "id_vet",
-      as: "veterinario"
-    }
-  },
-  { $unwind: "$veterinario" },
-  {
-    $match: { "veterinario.activo": true }
-  },
-]);
-* */
 
 /* Query 6:  Pacientes con vacunas vencidas (próxima dosis anterior a hoy)
 db.vacunas.aggregate([
