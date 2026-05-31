@@ -12,6 +12,8 @@ const cassandraClient = new cassandra.Client({
     }
 });
 
+const KEYSPACE = process.env.CASSANDRA_KEYSPACE;
+
 cassandraClient.connect()
     .then(() => {})
     .catch((err) => console.error('Cassandra connection error:', err))
@@ -283,11 +285,15 @@ app.get('/query7', async (req, res) => {
 })
 
 
-app.get('/stock', async (req, res) => { //TODO temporal test query
+app.get('/query8', async (req, res) => {
+    /* Query 8: Stock de productos con menos de 50 unidades y su proveedor.*/
+    //TODO preguntar allow filtering
     try {
         res.json((await cassandraClient.execute(
-            `SELECT *FROM "${process.env.CASSANDRA_KEYSPACE}".stock_farmaceutico;`)
-            ).rows);
+                `SELECT nombre, unidades, proveedor
+                FROM "${KEYSPACE}".stock_farmaceutico WHERE unidades<50
+                ALLOW FILTERING;`)
+        ).rows);
     } catch (err) {
         console.error('Error executing Cassandra query:', err);
         res.status(500).send('Internal Server Error');
@@ -298,20 +304,6 @@ app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
 
-/* Query 8: Stock de productos con menos de 50 unidades y su proveedor.
-// TODO: este dijimos que lo ibamos a hacer en Cassandra. asi que podemos descartarlo.
-db.productos.find(
-  {
-    unidades: { $lt: 50 }
-  },
-  {
-    _id: 0,
-    nombre: 1,
-    unidades: 1,
-    proveedor: 1
-  }
-)
-*/
 
 /* Query 9: Consultas de tipo 'Control' con costo menor a $5.000
 db.consultas.find(
