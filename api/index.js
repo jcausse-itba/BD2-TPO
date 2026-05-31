@@ -618,36 +618,3 @@ app.post('/query14', validateConsulta, async (req, res) => {
 app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
-
-
-/* Query 14: Registro de nueva consulta médica con validación de paciente y veterinario existentes.
-// TODO: preguntar si esta bien validar con 'if'. o como se debeiria hacer en mongo.
-// sino, entonces lo hacemos en Cassandra si hay algo como RIRs.
-
-const paciente = db.pacientes.findOne({
-    id_paciente: "P001",
-    activo: true
-});
-
-const veterinario = db.veterinarios.findOne({
-    id_vet: "V001",
-    activo: true
-});
-
-if (paciente && veterinario) {
-    db.consultas.insertOne({
-        id_consulta: "CON009",
-        id_paciente: "P001",
-        id_vet: "V001",
-        fecha: new Date(),
-        motivo: "Control general",
-        diagnostico: "En observación",
-        costo: 5000,
-        estado: "Seguimiento"
-    });
-} else {
-    print("Paciente o veterinario inexistente/inactivo");
-}
-*/
-
-// Query 15. se lo dejamos a casandra.
