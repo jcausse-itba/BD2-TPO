@@ -381,55 +381,57 @@ app.get('/query11', async (req, res) => {
     ).toArray());
 });
 
+
+app.get('/query12', async (req, res) => {
+    /** Query 12: Propietarios sin consultas registradas en el último año*/
+    res.send(await mongoose.connection.db.collection('propietarios').aggregate([
+        {
+            $lookup: {
+                from: "pacientes",
+                localField: "id_propietario",
+                foreignField: "id_propietario",
+                as: "pacientes"
+            }
+        },
+        {
+            $lookup: {
+                from: "consultas",
+                localField: "pacientes.id_paciente",
+                foreignField: "id_paciente",
+                as: "consultas"
+            }
+        },
+        {
+            $match: {
+                consultas: {
+                    $not: {
+                        $elemMatch: {
+                            fecha: {
+                                $gte: new Date(
+                                    new Date().setFullYear(new Date().getFullYear() - 1)
+                                )
+                            }
+                        }
+                    }
+                }
+            }
+        },
+        {
+            $project: {
+                _id: 0,
+                id_propietario: 1,
+                nombre: 1,
+                apellido: 1
+            }
+        }
+    ]).toArray());
+})
+
+
 app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
 
-
-/** Query 12: Propietarios sin consultas registradas en el último año
-
-db.propietarios.aggregate([
-  {
-    $lookup: {
-      from: "pacientes",
-      localField: "id_propietario",
-      foreignField: "id_propietario",
-      as: "pacientes"
-    }
-  },
-  {
-    $lookup: {
-      from: "consultas",
-      localField: "pacientes.id_paciente",
-      foreignField: "id_paciente",
-      as: "consultas"
-    }
-  },
-  {
-    $match: {
-      consultas: {
-        $not: {
-          $elemMatch: {
-            fecha: {
-              $gte: new Date(
-                new Date().setFullYear(new Date().getFullYear() - 1)
-              )
-            }
-          }
-        }
-      }
-    }
-  },
-  {
-    $project: {
-      _id: 0,
-      id_propietario: 1,
-      nombre: 1,
-      apellido: 1
-    }
-  }
-])
- */
 
 /* Query 13: ABM completo de propietarios: alta, modificación de datos, baja lógica
 // no es de obtener datos, sino que es de eliminar, modificar o subir datos. y poner ejemplos.
