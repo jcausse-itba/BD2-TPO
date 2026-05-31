@@ -209,6 +209,52 @@ app.get('/query5', async (req, res) => {
 })
 
 
+app.get('/query6', async (req, res) => {
+    /* Query 6:  Pacientes con vacunas vencidas (próxima dosis anterior a hoy)*/
+    res.send(await mongoose.connection.db.collection('vacunaciones').aggregate([
+        {
+            $match: {
+                $expr: {
+                    $lt: [
+                        "$proxima_dosis",
+                        {
+                            $dateToString: {
+                                format: "%Y-%m-%d",
+                                date: "$$NOW"
+                            }
+                        }
+                    ]
+                }
+            }
+        },
+        {
+            $group: {
+                _id: "$id_paciente"
+            }
+        },
+        {
+            $lookup: {
+                from: "pacientes",
+                localField: "_id",
+                foreignField: "id_paciente",
+                as: "paciente"
+            }
+        },
+        {
+            $unwind: "$paciente"
+        },
+        {
+            $project: {
+                _id: 0,
+                id_paciente: "$paciente.id_paciente",
+                nombre: "$paciente.nombre",
+                especie: "$paciente.especie"
+            }
+        }
+    ]).toArray());
+})
+
+
 app.get('/stock', async (req, res) => { //TODO temporal test query
     try {
         res.json((await cassandraClient.execute(
@@ -224,42 +270,6 @@ app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
 
-
-/* Query 6:  Pacientes con vacunas vencidas (próxima dosis anterior a hoy)
-db.vacunas.aggregate([
-  {
-    $match: {
-      proxima_dosis: {
-        $lt: new Date()
-      }
-    }
-  },
-  {
-    $group: {
-      _id: "$id_paciente"
-    }
-  },
-  {
-    $lookup: {
-      from: "pacientes",
-      localField: "_id",
-      foreignField: "id_paciente",
-      as: "paciente"
-    }
-  },
-  {
-    $unwind: "$paciente"
-  },
-  {
-    $project: {
-      _id: 0,
-      id_paciente: "$paciente.id_paciente",
-      nombre: "$paciente.nombre",
-      especie: "$paciente.especie"
-    }
-  }
-])
-*/
 
 /* Query 7: Top 5 diagnósticos más frecuentes
 db.consultas.aggregate([
