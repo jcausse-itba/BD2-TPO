@@ -323,54 +323,61 @@ app.get('/query9', async (req, res) => {
     ).toArray());
 });
 
+
+app.get('/query10', async (req, res) => {
+    /*Query 10: los pacientes de una sucursal determinada (a través del veterinario*/
+    const { sucursal } = req.query;
+    if (!sucursal || typeof sucursal !== 'string') {
+        return res.status(400).json({
+            error: "Bad Request: 'sucursal' query parameter is required and must be a string."
+        });
+    }
+    res.send(await mongoose.connection.db.collection('consultas').aggregate([
+            {
+                $lookup: {
+                    from: "veterinarios",
+                    localField: "id_vet",
+                    foreignField: "id_vet",
+                    as: "vet"
+                }
+            },
+            { $unwind: "$vet" },
+            {
+                $match: {
+                    "vet.sucursal": sucursal
+                }
+            },
+            {
+                $group: {
+                    _id: "$id_paciente"
+                }
+            },
+            {
+                $lookup: {
+                    from: "pacientes",
+                    localField: "_id",
+                    foreignField: "id_paciente",
+                    as: "paciente"
+                }
+            },
+            { $unwind: "$paciente" },
+            {
+                $project: {
+                    _id: 0,
+                    id_paciente: "$paciente.id_paciente",
+                    nombre: "$paciente.nombre",
+                    especie: "$paciente.especie",
+                    raza: "$paciente.raza",
+                    activo: "$paciente.activo"
+                }
+            }
+        ]).toArray());
+});
+
 app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
 
-
-/* Query 10: los pacientes de una sucursal determinada (a través del veterinario
-let sucursal = "Palermo";  // Debe ser parametrizable la sucursal.
-db.consultas.aggregate([
-  {
-    $lookup: {
-      from: "veterinarios",
-      localField: "id_vet",
-      foreignField: "id_vet",
-      as: "vet"
-    }
-  },
-  { $unwind: "$vet" },
-  {
-    $match: {
-      "vet.sucursal": sucursal
-    }
-  },
-  {
-    $group: {
-      _id: "$id_paciente"
-    }
-  },
-  {
-    $lookup: {
-      from: "pacientes",
-      localField: "_id",
-      foreignField: "id_paciente",
-      as: "paciente"
-    }
-  },
-  { $unwind: "$paciente" },
-  {
-    $project: {
-      _id: 0,
-      id_paciente: "$paciente.id_paciente",
-      nombre: "$paciente.nombre",
-      especie: "$paciente.especie",
-      raza: "$paciente.raza",
-      activo: "$paciente.activo"
-    }
-  }
-])
-*/
 
 /** Query 11: Vista agregada: ingresos totales por veterinario en el mes actual
 
