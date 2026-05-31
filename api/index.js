@@ -255,6 +255,34 @@ app.get('/query6', async (req, res) => {
 })
 
 
+app.get('/query7', async (req, res) => {
+    /* Query 7: Top 5 diagnósticos más frecuentes*/
+    res.send(await mongoose.connection.db.collection('consultas').aggregate([
+            {
+                $group: {
+                    _id: "$diagnostico",
+                    cantidad: { $sum: 1 }
+                }
+            },
+            {
+                $project: {
+                    diagnostico: "$_id",
+                    cantidad: 1,
+                    _id: 0,
+                }
+            },
+            {
+                $sort: {
+                    cantidad: -1
+                }
+            },
+            {
+                $limit: 5
+            }
+        ]).toArray());
+})
+
+
 app.get('/stock', async (req, res) => { //TODO temporal test query
     try {
         res.json((await cassandraClient.execute(
@@ -269,33 +297,6 @@ app.get('/stock', async (req, res) => { //TODO temporal test query
 app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
-
-
-/* Query 7: Top 5 diagnósticos más frecuentes
-db.consultas.aggregate([
-  {
-    $group: {
-      _id: "$diagnostico",
-      cantidad: { $sum: 1 }
-    }
-  },
-  {
-    $project: {
-      diagnostico: "$_id",
-      cantidad: 1,
-      _id: 0,
-    }
-  },
-  {
-    $sort: {
-      cantidad: -1
-    }
-  },
-  {
-    $limit: 5
-  }
-]);
-* */
 
 /* Query 8: Stock de productos con menos de 50 unidades y su proveedor.
 // TODO: este dijimos que lo ibamos a hacer en Cassandra. asi que podemos descartarlo.
