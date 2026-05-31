@@ -550,30 +550,6 @@ app.listen(port, () => {
 })
 
 
-/* 
-// modificacion
-db.propietarios.updateOne(
-    { id_propietario: "C007" },
-    {
-        $set: {
-            email: "lucia.perez@gmail.com",
-            telefono: "1199998888"
-        }
-    }
-)
-
-// baja logica: asumimos que es poner "activo" en false.
-db.propietarios.updateOne(
-    { id_propietario: "C007" },
-    {
-        $set: {
-            activo: false
-        }
-    }
-)
-
-*/
-
 /* Query 14: Registro de nueva consulta médica con validación de paciente y veterinario existentes.
 // TODO: preguntar si esta bien validar con 'if'. o como se debeiria hacer en mongo.
 // sino, entonces lo hacemos en Cassandra si hay algo como RIRs.
