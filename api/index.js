@@ -430,9 +430,7 @@ app.get('/query12', async (req, res) => {
 
 /* Query 13: ABM completo de propietarios: alta, modificación de datos, baja lógica*/
 // no es de obtener datos, sino que es de eliminar, modificar o subir datos. y poner ejemplos.
-app.post('/query13', async (req, res) => {
-    // alta. TODO: id mayor que el actual deberia ser determinado automaticamente?
-    const { id_propietario, nombre, apellido, dni, email, telefono, ciudad, provincia } = req.body;
+const validatePropietario = (req, res, next) => {
     const validationRules = [
         { name: 'id_propietario', type: 'string' },
         { name: 'nombre', type: 'string' },
@@ -443,6 +441,7 @@ app.post('/query13', async (req, res) => {
         { name: 'ciudad', type: 'string' },
         { name: 'provincia', type: 'string' }
     ];
+
     for (const rule of validationRules) {
         const value = req.body[rule.name];
         if (value === undefined || value === null || value === '') {
@@ -456,7 +455,12 @@ app.post('/query13', async (req, res) => {
             });
         }
     }
+    next();
+};
 
+app.post('/query13', validatePropietario, async (req, res) => {
+    // alta. TODO: id mayor que el actual deberia ser determinado automaticamente? (actualmente no hay validacion, se pueden duplicar las ids)
+    const { id_propietario, nombre, apellido, dni, email, telefono, ciudad, provincia } = req.body;
     try {
         await mongoose.connection.db.collection('propietarios').insertOne({
             id_propietario: id_propietario,
@@ -471,6 +475,37 @@ app.post('/query13', async (req, res) => {
         res.status(201).json({ message: "Propietario creado con éxito" });
     } catch (err) {
         console.error('Error en Alta de Propietario:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+app.put('/query13', validatePropietario, async (req, res) => {
+    const { id_propietario, nombre, apellido, dni, email, telefono, ciudad, provincia } = req.body;
+    try {
+        const result = await mongoose.connection.db.collection('propietarios').updateOne(
+            { id_propietario: id_propietario },
+            {
+                $set: {
+                    nombre: nombre,
+                    apellido: apellido,
+                    dni: dni,
+                    email: email,
+                    telefono: telefono,
+                    ciudad: ciudad,
+                    provincia: provincia
+                }
+            }
+        );
+        if (result.matchedCount === 0) {
+            return res.status(404).json({
+                error: `Not Found: No se encontró ningún propietario con el id_propietario '${id_propietario}'.`
+            });
+        }
+        res.status(200).json({
+            message: "Propietario modificado con éxito"
+        });
+    } catch (err) {
+        console.error('Error en Modificación de Propietario:', err);
         res.status(500).send('Internal Server Error');
     }
 });
