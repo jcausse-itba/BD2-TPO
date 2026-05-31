@@ -61,7 +61,7 @@ services:
       dockerfile: Dockerfile
     container_name: bd2-tpo-g10-api
     ports:
-      - "8000:8000"
+      - "3000:3000"
     environment:
       - MONGO_URI=${MONGO_URI}
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
