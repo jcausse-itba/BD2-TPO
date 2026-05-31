@@ -510,6 +510,41 @@ app.put('/query13', validatePropietario, async (req, res) => {
     }
 });
 
+
+app.delete('/query13', async (req, res) => {
+    // baja logica: asumimos que es poner "activo" en false.
+    //TODO revisar q el delete logico sea tenido en cuenta por las otras queries q usan propietario
+    const { id_propietario } = req.body;
+    if (!id_propietario || typeof id_propietario !== 'string') {
+        return res.status(400).json({
+            error: "Bad Request: El campo 'id_propietario' es obligatorio y debe ser un string."
+        });
+    }
+
+    try {
+        const result = await mongoose.connection.db.collection('propietarios').updateOne(
+            { id_propietario: id_propietario },
+            {
+                $set: {
+                    activo: "False"
+                }
+            }
+        );
+        if (result.matchedCount === 0) {
+            return res.status(404).json({
+                error: `Not Found: No se encontró ningún propietario con el id_propietario '${id_propietario}'.`
+            });
+        }
+        res.status(200).json({
+            message: "Propietario dado de baja con éxito"
+        });
+    } catch (err) {
+        console.error('Error en Baja de Propietario:', err);
+        res.status(500).send('Internal Server Error');
+    }
+});
+
+
 app.listen(port, () => {
     console.log(`Grupo 10 app listening on port ${port}`)
 })
