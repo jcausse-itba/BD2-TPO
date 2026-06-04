@@ -17,5 +17,5 @@ Para ejecutar el proyecto es necesario contar con [Docker Engine](https://docs.d
 Una vez instalados, ejecutar el siguiente comando en la raíz del proyecto:
 
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
