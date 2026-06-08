@@ -1,5 +1,6 @@
 services:
 
+  # MongoDB Container
   mongo:
     image: mongo:latest
     container_name: bd2-tpo-g10-mongo
@@ -14,12 +15,13 @@ services:
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
     healthcheck:
-      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      test: ["CMD-SHELL", "mongosh -u $$MONGO_INITDB_ROOT_USERNAME -p $$MONGO_INITDB_ROOT_PASSWORD --authenticationDatabase admin --eval \"db.adminCommand('ping')\""]
       interval: 10s
       timeout: 5s
       retries: 5
       start_period: 30s
     
+  # Apache Cassandra Container
   cassandra:
     image: cassandra:latest
     container_name: bd2-tpo-g10-cassandra
@@ -37,6 +39,7 @@ services:
       retries: 5
       start_period: 60s
 
+  # Apache Cassandra Init Container
   cassandra-init:
     image: cassandra:latest
     container_name: bd2-tpo-g10-cassandra-init
@@ -55,6 +58,7 @@ services:
         condition: service_healthy
     restart: on-failure
 
+  # Express.js API Container
   api:
     build:
       context: ./api
