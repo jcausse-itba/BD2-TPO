@@ -20,7 +20,7 @@ services:
       timeout: 5s
       retries: 5
       start_period: 30s
-    
+
   # Apache Cassandra Container
   cassandra:
     image: cassandra:latest
@@ -41,7 +41,9 @@ services:
 
   # Apache Cassandra Init Container
   cassandra-init:
-    image: cassandra:latest
+    build:
+      context: .
+      dockerfile: init-cassandra.Dockerfile
     container_name: bd2-tpo-g10-cassandra-init
     volumes:
       - ./example_datasets:/example_datasets:ro
@@ -52,7 +54,6 @@ services:
       - CASSANDRA_USER=${CASSANDRA_USER}
       - CASSANDRA_PASSWORD=${CASSANDRA_PASSWORD}
       - CASSANDRA_KEYSPACE=${CASSANDRA_KEYSPACE}
-    entrypoint: ["/bin/bash", "/init-cassandra.sh"]
     depends_on:
       cassandra:
         condition: service_healthy
