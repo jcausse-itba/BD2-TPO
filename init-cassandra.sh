@@ -5,7 +5,7 @@ DATASET_DIR="/example_datasets"
 
 declare -A COLLECTIONS
 COLLECTIONS=(
-    ["stock_farmaceutico"]="CREATE TABLE IF NOT EXISTS $CASSANDRA_KEYSPACE.stock_farmaceutico (id_producto text PRIMARY KEY, nombre text, categoria text, unidades int, precio_unit decimal, vencimiento date, proveedor text); CREATE INDEX IF NOT EXISTS stock_unidades_idx ON stock_farmaceutico (unidades) USING 'SAI';"
+    ["stock_farmaceutico"]="CREATE TABLE IF NOT EXISTS $CASSANDRA_KEYSPACE.stock_farmaceutico (id_producto text PRIMARY KEY, nombre text, categoria text, unidades int, precio_unit decimal, vencimiento date, proveedor text); CREATE INDEX IF NOT EXISTS stock_unidades_idx ON $CASSANDRA_KEYSPACE.stock_farmaceutico (unidades) USING 'SAI';"
 )
 
 declare -A COLUMNS
