@@ -29,9 +29,6 @@ services:
       - "9042:9042"
     volumes:
       - cassandra_data:/var/lib/cassandra
-    environment:
-      - CASSANDRA_USER=${CASSANDRA_USER}
-      - CASSANDRA_PASSWORD=${CASSANDRA_PASSWORD}
     healthcheck:
       test: ["CMD-SHELL", "nodetool status | grep -q '^UN'"]
       interval: 10s
@@ -51,8 +48,6 @@ services:
       - cassandra_data:/cassandra_data
     environment:
       - CASSANDRA_HOST=${CASSANDRA_HOST}
-      - CASSANDRA_USER=${CASSANDRA_USER}
-      - CASSANDRA_PASSWORD=${CASSANDRA_PASSWORD}
       - CASSANDRA_KEYSPACE=${CASSANDRA_KEYSPACE}
     depends_on:
       cassandra:
@@ -72,8 +67,6 @@ services:
       - MONGO_INITDB_ROOT_USERNAME=${MONGO_INITDB_ROOT_USERNAME}
       - MONGO_INITDB_ROOT_PASSWORD=${MONGO_INITDB_ROOT_PASSWORD}
       - MONGO_INITDB_DATABASE=${MONGO_INITDB_DATABASE}
-      - CASSANDRA_USER=${CASSANDRA_USER}
-      - CASSANDRA_PASSWORD=${CASSANDRA_PASSWORD}
       - CASSANDRA_HOST=${CASSANDRA_HOST}
       - CASSANDRA_DC=${CASSANDRA_DC}
       - CASSANDRA_KEYSPACE=${CASSANDRA_KEYSPACE}

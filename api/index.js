@@ -7,8 +7,8 @@ const cassandraClient = new cassandra.Client({
     localDataCenter: process.env.CASSANDRA_DC || 'datacenter1',
     keyspace: process.env.CASSANDRA_KEYSPACE,
     credentials: {
-        username: process.env.CASSANDRA_USER || 'cassandra',
-        password: process.env.CASSANDRA_PASSWORD || 'cassandra'
+        username: 'cassandra',
+        password: 'cassandra'
     }
 });
 
