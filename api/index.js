@@ -84,8 +84,7 @@ app.get('/query2', async (req, res) => {
 
 app.get('/query3', async (req, res) => {
     /** QUERY 3: Historial completo de un paciente: consultas y vacunaciones ordenadas por fecha*/
-    // TODO: preguntar si esta bien usar $unionWith
-    // vendria bien hacerlo en cassandra sino. porque "hay muchas consultas seguro, muchos datos!!"
+
     res.send(await mongoose.connection.db.collection('consultas').aggregate([
         {
             $match: {
@@ -545,9 +544,6 @@ app.delete('/query13', async (req, res) => {
 });
 
 /* Query 14: Registro de nueva consulta médica con validación de paciente y veterinario existentes.*/
-// TODO: preguntar si esta bien validar con 'if'. o como se debeiria hacer en mongo.
-// sino, entonces lo hacemos en Cassandra si hay algo como RIRs.
-//TODO la fecha acepta 60 de diciembre
 const validateConsulta = (req, res, next) => {
     const validationRules = [
         { name: 'id_consulta', type: 'string' },
@@ -577,6 +573,10 @@ const validateConsulta = (req, res, next) => {
                 error: `Bad Request: El campo '${rule.name}' no tiene un formato válido. Debe ser YYYY-MM-DD (Ej: '2026-06-03').`
             });
         }
+    }
+    const parsedDate = new Date(req.body['fecha']);
+    if(isNaN(parsedDate.getTime())) {
+        return res.status(400).json({ message: "Bad Request: Fecha inválida." });
     }
     next();
 };
