@@ -44,7 +44,10 @@ app.get('/query1', async (req, res) => {
         },
         { $unwind: "$propietario" },
         {
-            $match: { activo: "True" }
+            $match: { 
+                activo: "True",
+                activo: { $ne: "False" } 
+            }
         },
         {
             $project: {
@@ -63,7 +66,7 @@ app.get('/query1', async (req, res) => {
 })
 
 
-// TODO: preguntar si las id's usamos la del dataset (ej: id_vet, id_propietario) o las sacamos y usamos las de mongo.
+
 app.get('/query2', async (req, res) => {
     res.send(await mongoose.connection.db.collection('consultas').aggregate([
             {
@@ -150,7 +153,8 @@ app.get('/query4', async (req, res) => {
                         { $size: "$paciente" },
                         1
                     ]
-                }
+                },
+                activo: { $ne: "False" } 
             }
         },
         {
@@ -413,7 +417,8 @@ app.get('/query12', async (req, res) => {
                             }
                         }
                     }
-                }
+                },
+                activo: { $ne: "False" } 
             }
         },
         {
@@ -519,7 +524,6 @@ app.put('/query13', validatePropietario, async (req, res) => {
 
 app.delete('/query13', async (req, res) => {
     // baja logica: poner "activo" en false.
-    //TODO revisar q el delete logico sea tenido en cuenta por las otras queries q usan propietario
     const { id_propietario } = req.body;
     if (!id_propietario || typeof id_propietario !== 'string') {
         return res.status(400).json({
