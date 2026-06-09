@@ -46,7 +46,7 @@ app.get('/query1', async (req, res) => {
         {
             $match: { 
                 activo: "True",
-                activo: { $ne: "False" } 
+                "propietario.activo": { $ne: "False" } 
             }
         },
         {
