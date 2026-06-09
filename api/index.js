@@ -458,8 +458,15 @@ const validatePropietario = (req, res, next) => {
 };
 
 app.post('/query13', validatePropietario, async (req, res) => {
-    // alta. TODO: id mayor que el actual deberia ser determinado automaticamente? (actualmente no hay validacion, se pueden duplicar las ids)
+    // alta. 
     const { id_propietario, nombre, apellido, dni, email, telefono, ciudad, provincia } = req.body;
+
+    // validacion de id duplicada
+    const propietario = await mongoose.connection.db.collection('propietarios').findOne({ id_propietario });
+    if (propietario) {
+        return res.status(400).json({ message: `Bad Request: Id ya presente ${id_propietario}` });
+    } 
+
     try {
         await mongoose.connection.db.collection('propietarios').insertOne({
             id_propietario: id_propietario,
@@ -511,7 +518,7 @@ app.put('/query13', validatePropietario, async (req, res) => {
 
 
 app.delete('/query13', async (req, res) => {
-    // baja logica: asumimos que es poner "activo" en false.
+    // baja logica: poner "activo" en false.
     //TODO revisar q el delete logico sea tenido en cuenta por las otras queries q usan propietario
     const { id_propietario } = req.body;
     if (!id_propietario || typeof id_propietario !== 'string') {
