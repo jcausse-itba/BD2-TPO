@@ -23,6 +23,16 @@ mongoose.connect(process.env.MONGO_URI)
     .catch((err) => console.error('Cassandra MongoDB error:', err))
 
 const app = express()
+
+// CORS — allow the frontend to reach the API from any origin
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', '*');
+    res.header('Access-Control-Allow-Headers', 'Content-Type');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, OPTIONS');
+    if (req.method === 'OPTIONS') return res.sendStatus(204);
+    next();
+});
+
 app.use(express.json())
 
 const port = process.env.PORT || 3000
