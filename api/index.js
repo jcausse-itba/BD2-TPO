@@ -305,8 +305,7 @@ app.get('/query8', async (req, res) => {
     try {
         res.json((await cassandraClient.execute(
                 `SELECT nombre, unidades, proveedor
-                FROM "${KEYSPACE}".stock_farmaceutico WHERE unidades<50
-                ALLOW FILTERING;`)
+                FROM "${KEYSPACE}".stock_farmaceutico WHERE unidades<50;`)
         ).rows);
     } catch (err) {
         console.error('Error executing Cassandra query:', err);
