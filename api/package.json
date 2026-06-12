@@ -9,6 +9,8 @@
   "dependencies": {
     "cassandra-driver": "^4.9.0",
     "express": "^4.19.2",
-    "mongoose": "^9.6.2"
+    "mongoose": "^9.6.2",
+    "swagger-jsdoc": "^6.3.0",
+    "swagger-ui-express": "^5.0.1"
   }
 }
