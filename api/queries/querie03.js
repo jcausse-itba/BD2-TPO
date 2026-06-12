@@ -46,7 +46,7 @@ module.exports = (app, cassandraClient, KEYSPACE) => {
             },
             {
                 $unionWith: {
-                    coll: "vacunas",
+                    coll: "vacunaciones",
                     pipeline: [
                         {
                             $match: {
