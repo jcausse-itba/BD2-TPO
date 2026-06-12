@@ -846,10 +846,13 @@ const validateConsulta = (req, res, next) => {
  *             properties:
  *               id_consulta:
  *                 type: string
+ *                 example: "CON029"
  *               id_paciente:
  *                 type: string
+ *                 example: "P010"
  *               id_vet:
  *                 type: string
+ *                 example: "V010"
  *               fecha:
  *                 type: string
  *                 format: date
