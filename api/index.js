@@ -953,6 +953,16 @@ const validateStockDecrement = (req, res, next) => {
  *                       type: string
  *                     cantidad:
  *                       type: number
+ *             example:
+ *               productos:
+ *                 - id_producto: "PRD002"
+ *                   cantidad: 5
+ *                 - id_producto: "PRD004"
+ *                   cantidad: 2
+ *                 - id_producto: "PRD006"
+ *                   cantidad: 1
+ *                 - id_producto: "PRD008"
+ *                   cantidad: 3
  *     responses:
  *       200:
  *         description: Stock actualizado de forma masiva con éxito
