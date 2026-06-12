@@ -6,6 +6,9 @@ const swaggerJsDoc = require('swagger-jsdoc');
 const fs = require('fs');
 const path = require('path');
 
+const port = process.env.PORT || 3000
+
+const KEYSPACE = process.env.CASSANDRA_KEYSPACE;
 const cassandraClient = new cassandra.Client({
     contactPoints: [process.env.CASSANDRA_HOST || 'localhost'],
     localDataCenter: process.env.CASSANDRA_DC || 'datacenter1',
@@ -15,8 +18,6 @@ const cassandraClient = new cassandra.Client({
         password: 'cassandra'
     }
 });
-
-const KEYSPACE = process.env.CASSANDRA_KEYSPACE;
 
 cassandraClient.connect()
     .then(() => {})
@@ -28,7 +29,6 @@ mongoose.connect(process.env.MONGO_URI)
 
 const app = express()
 
-// CORS — allow the frontend to reach the API from any origin
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', '*');
     res.header('Access-Control-Allow-Headers', 'Content-Type');
@@ -50,10 +50,8 @@ const swaggerOptions = {
     },
     apis: [__filename, './queries/*.js'],
 };
-const swaggerDocs = swaggerJsDoc(swaggerOptions);
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocs));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerJsDoc(swaggerOptions)));
 
-const port = process.env.PORT || 3000
 
 /**
  * @swagger
@@ -69,7 +67,6 @@ app.get('/', (req, res) => {
 })
 
 const queriesDir = path.join(__dirname, 'queries');
-
 fs.readdirSync(queriesDir).filter(file => file.endsWith('.js'))
     .forEach(file => {
         require(path.join(queriesDir, file))(app, cassandraClient, KEYSPACE);
