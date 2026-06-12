@@ -719,7 +719,10 @@ app.put('/query13', validatePropietario, async (req, res) => {
     const { id_propietario, nombre, apellido, dni, email, telefono, ciudad, provincia } = req.body;
     try {
         const result = await mongoose.connection.db.collection('propietarios').updateOne(
-            { id_propietario: id_propietario },
+            { 
+                id_propietario: id_propietario,
+                activo: { $ne: "False" } 
+            },
             {
                 $set: {
                     nombre: nombre,
