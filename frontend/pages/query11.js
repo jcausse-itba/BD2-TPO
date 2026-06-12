@@ -24,9 +24,12 @@ export default async function init(container) {
     try {
         const data = await api.query11();
         renderTable(tableEl, data, [
-            { key: '_id', label: 'Veterinario (ID)' },
-            { key: 'total_ingresos', label: 'Total ingresos', render: v => v != null ? formatCurrency(v) : '—' },
-            { key: 'cantidad_consultas', label: 'Consultas' },
+            { key: 'id_vet', label: 'ID de Veterinario' },
+            { key: 'nombre', label: 'Nombre' },
+            { key: 'apellido', label: 'Apellido' },
+            { key: 'sucursal', label: 'Sucursal' },
+            { key: 'cantidad_consultas', label: 'Cantidad de consultas' },
+            { key: 'ingresos_totales', label: 'Total de Ingresos', render: v => v != null ? formatCurrency(v) : '—' }
         ]);
     } catch (err) {
         showError(tableEl, err.message);

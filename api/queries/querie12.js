@@ -38,7 +38,7 @@ module.exports = (app, cassandraClient, KEYSPACE) => {
                                 fecha: {
                                     $gte: new Date(
                                         new Date().setFullYear(new Date().getFullYear() - 1)
-                                    )
+                                    ).toISOString().split('T')[0]
                                 }
                             }
                         }

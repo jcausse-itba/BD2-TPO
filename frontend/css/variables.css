@@ -65,6 +65,6 @@
     --transition-slow:   400ms ease;
 
     /* ── Layout ── */
-    --sidebar-width: 260px;
+    --sidebar-width: 350px;
     --header-height: 60px;
 }
