@@ -50,7 +50,7 @@ module.exports = (app, cassandraClient, KEYSPACE) => {
                     pipeline: [
                         {
                             $match: {
-                                id_paciente: "P001"
+                                id_paciente: id_paciente
                             }
                         },
                         {
