@@ -648,26 +648,32 @@ const validatePropietario = (req, res, next) => {
  *         description: Bad Request
  */
 app.post('/query13', validatePropietario, async (req, res) => {
-    // alta. 
+    // alta. (insert)
     const { id_propietario, nombre, apellido, dni, email, telefono, ciudad, provincia } = req.body;
 
     // validacion de id duplicada
     const propietario = await mongoose.connection.db.collection('propietarios').findOne({ id_propietario });
-    if (propietario) {
+    if (propietario && propietario.activo != 'False') {
         return res.status(400).json({ message: `Bad Request: Id ya presente ${id_propietario}` });
     } 
 
     try {
-        await mongoose.connection.db.collection('propietarios').insertOne({
-            id_propietario: id_propietario,
-            nombre: nombre,
-            apellido: apellido,
-            dni: dni,
-            email: email,
-            telefono: telefono,
-            ciudad: ciudad,
-            provincia: provincia
-        })
+        await mongoose.connection.db.collection('propietarios').updateOne(
+            { id_propietario: id_propietario },
+            {
+                $set: {
+                    nombre: nombre,
+                    apellido: apellido,
+                    dni: dni,
+                    email: email,
+                    telefono: telefono,
+                    ciudad: ciudad,
+                    provincia: provincia,
+                    activo: 'True'
+                }
+            },
+            { upsert: true }
+        );
         res.status(201).json({ message: "Propietario creado con éxito" });
     } catch (err) {
         console.error('Error en Alta de Propietario:', err);
