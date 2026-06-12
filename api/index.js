@@ -778,7 +778,10 @@ app.delete('/query13', async (req, res) => {
             error: "Bad Request: El campo 'id_propietario' es obligatorio y debe ser un string."
         });
     }
-
+    const propietario = await mongoose.connection.db.collection('propietarios').findOne({ id_propietario });
+    if (propietario && propietario.activo === 'False') {
+        return res.status(400).json({ message: `Bad Request: Id ya fue eliminado  ${id_propietario}` });
+    } 
     try {
         const result = await mongoose.connection.db.collection('propietarios').updateOne(
             { id_propietario: id_propietario },
