@@ -15,7 +15,7 @@ module.exports = (app, cassandraClient, KEYSPACE) => {
         /* Query 8: Stock de productos con menos de 50 unidades y su proveedor.*/
         try {
             res.json((await cassandraClient.execute(
-                    `SELECT nombre, unidades, proveedor
+                    `SELECT id_producto , nombre, categoria, unidades, precio_unit, vencimiento, proveedor
                 FROM "${KEYSPACE}".stock_farmaceutico WHERE unidades<50;`)
             ).rows);
         } catch (err) {
