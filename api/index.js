@@ -453,6 +453,7 @@ app.get('/query9', async (req, res) => {
  *         name: sucursal
  *         schema:
  *           type: string
+ *           default: Palermo
  *         required: true
  *         description: Nombre de la sucursal
  *     responses:
