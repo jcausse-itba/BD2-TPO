@@ -398,7 +398,6 @@ app.get('/query7', async (req, res) => {
  */
 app.get('/query8', async (req, res) => {
     /* Query 8: Stock de productos con menos de 50 unidades y su proveedor.*/
-    //TODO preguntar allow filtering
     try {
         res.json((await cassandraClient.execute(
                 `SELECT nombre, unidades, proveedor
