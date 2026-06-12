@@ -56,11 +56,11 @@ const port = process.env.PORT || 3000
 /**
  * @swagger
  * /:
- * get:
- * summary: Ruta raíz
- * responses:
- * 200:
- * description: Retorna el nombre del grupo
+ *   get:
+ *     summary: Ruta raíz
+ *     responses:
+ *       200:
+ *         description: Retorna el nombre del grupo
  */
 app.get('/', (req, res) => {
     res.send('Grupo 10')
@@ -69,11 +69,11 @@ app.get('/', (req, res) => {
 /**
  * @swagger
  * /query1:
- * get:
- * summary: 1 Pacientes activos con todos sus datos de propietario.
- * responses:
- * 200:
- * description: OK
+ *   get:
+ *     summary: 1 Pacientes activos con todos sus datos de propietario.
+ *     responses:
+ *       200:
+ *         description: OK
  */
 app.get('/query1', async (req, res) => {
     /* Pacientes activos con la totalidad de sus datos de propietario */
@@ -114,11 +114,11 @@ app.get('/query1', async (req, res) => {
 /**
  * @swagger
  * /query2:
- * get:
- * summary: 2 Consultas médicas abiertas (estado 'Seguimiento') con veterinario asignado y costo.
- * responses:
- * 200:
- * description: OK
+ *   get:
+ *     summary: 2 Consultas médicas abiertas (estado 'Seguimiento') con veterinario asignado y costo.
+ *     responses:
+ *       200:
+ *         description: OK
  */
 app.get('/query2', async (req, res) => {
     res.send(await mongoose.connection.db.collection('consultas').aggregate([
@@ -141,11 +141,11 @@ app.get('/query2', async (req, res) => {
 /**
  * @swagger
  * /query3:
- * get:
- * summary: 3 Historial completo de un paciente (consultas y vacunaciones) ordenadas por fecha.
- * responses:
- * 200:
- * description: OK
+ *   get:
+ *     summary: 3 Historial completo de un paciente (consultas y vacunaciones) ordenadas por fecha.
+ *     responses:
+ *       200:
+ *         description: OK
  */
 app.get('/query3', async (req, res) => {
     /** QUERY 3: Historial completo de un paciente: consultas y vacunaciones ordenadas por fecha*/
@@ -200,11 +200,11 @@ app.get('/query3', async (req, res) => {
 /**
  * @swagger
  * /query4:
- * get:
- * summary: 4 Propietarios con más de un paciente registrado.
- * responses:
- * 200:
- * description: OK
+ *   get:
+ *     summary: 4 Propietarios con más de un paciente registrado.
+ *     responses:
+ *       200:
+ *         description: OK
  */
 app.get('/query4', async (req, res) => {
     /* QUERY 4: Propietarios con más de un paciente registrado.*/
@@ -243,11 +243,11 @@ app.get('/query4', async (req, res) => {
 /**
  * @swagger
  * /query5:
- * get:
- * summary: 5 Veterinarios activos y cantidad de consultas realizadas en los últimos 60 días.
- * responses:
- * 200:
- * description: OK
+ *   get:
+ *     summary: 5 Veterinarios activos y cantidad de consultas realizadas en los últimos 60 días.
+ *     responses:
+ *       200:
+ *         description: OK
  */
 app.get('/query5', async (req, res) => {
     /* Query 5: eterinarios activos y cantidad de consultas realizadas en los últimos 60 días*/
@@ -298,11 +298,11 @@ app.get('/query5', async (req, res) => {
 /**
  * @swagger
  * /query6:
- * get:
- * summary: 6 Pacientes con vacunas vencidas (próxima dosis anterior a hoy).
- * responses:
- * 200:
- * description: OK
+ *   get:
+ *     summary: 6 Pacientes con vacunas vencidas (próxima dosis anterior a hoy).
+ *     responses:
+ *       200:
+ *         description: OK
  */
 app.get('/query6', async (req, res) => {
     /* Query 6:  Pacientes con vacunas vencidas (próxima dosis anterior a hoy)*/
@@ -353,11 +353,11 @@ app.get('/query6', async (req, res) => {
 /**
  * @swagger
  * /query7:
- * get:
- * summary: 7 Top 5 diagnósticos más frecuentes.
- * responses:
- * 200:
- * description: OK
+ *   get:
+ *     summary: 7 Top 5 diagnósticos más frecuentes.
+ *     responses:
+ *       200:
+ *         description: OK
  */
 app.get('/query7', async (req, res) => {
     /* Query 7: Top 5 diagnósticos más frecuentes*/
@@ -390,11 +390,11 @@ app.get('/query7', async (req, res) => {
 /**
  * @swagger
  * /query8:
- * get:
- * summary: 8 Stock de productos con menos de 50 unidades y su proveedor.
- * responses:
- * 200:
- * description: OK
+ *   get:
+ *     summary: 8 Stock de productos con menos de 50 unidades y su proveedor.
+ *     responses:
+ *       200:
+ *         description: OK
  */
 app.get('/query8', async (req, res) => {
     /* Query 8: Stock de productos con menos de 50 unidades y su proveedor.*/
@@ -414,11 +414,11 @@ app.get('/query8', async (req, res) => {
 /**
  * @swagger
  * /query9:
- * get:
- * summary: 9 Consultas de tipo 'Control' con costo menor a $5.000.
- * responses:
- * 200:
- * description: OK
+ *   get:
+ *     summary: 9 Consultas de tipo 'Control' con costo menor a $5.000.
+ *     responses:
+ *       200:
+ *         description: OK
  */
 app.get('/query9', async (req, res) => {
     /* Query 9: Consultas de tipo 'Control' con costo menor a $5.000*/
@@ -446,20 +446,20 @@ app.get('/query9', async (req, res) => {
 /**
  * @swagger
  * /query10:
- * get:
- * summary: 10 Todos los pacientes de una sucursal determinada.
- * parameters:
- * - in: query
- * name: sucursal
- * schema:
- * type: string
- * required: true
- * description: Nombre de la sucursal
- * responses:
- * 200:
- * description: OK
- * 400:
- * description: Bad Request
+ *   get:
+ *     summary: 10 Todos los pacientes de una sucursal determinada.
+ *     parameters:
+ *       - in: query
+ *         name: sucursal
+ *         schema:
+ *           type: string
+ *         required: true
+ *         description: Nombre de la sucursal
+ *     responses:
+ *       200:
+ *         description: OK
+ *       400:
+ *         description: Bad Request
  */
 app.get('/query10', async (req, res) => {
     /*Query 10: los pacientes de una sucursal determinada (a través del veterinario*/
@@ -515,11 +515,11 @@ app.get('/query10', async (req, res) => {
 /**
  * @swagger
  * /query11:
- * get:
- * summary: 11 Vista agregada (ingresos totales por veterinario en el mes actual).
- * responses:
- * 200:
- * description: OK
+ *   get:
+ *     summary: 11 Vista agregada (ingresos totales por veterinario en el mes actual).
+ *     responses:
+ *       200:
+ *         description: OK
  */
 app.get('/query11', async (req, res) => {
     /** Query 11: Vista agregada: ingresos totales por veterinario en el mes actual*/
@@ -531,11 +531,11 @@ app.get('/query11', async (req, res) => {
 /**
  * @swagger
  * /query12:
- * get:
- * summary: 12 Propietarios sin consultas registradas en el último año.
- * responses:
- * 200:
- * description: OK
+ *   get:
+ *     summary: 12 Propietarios sin consultas registradas en el último año.
+ *     responses:
+ *       200:
+ *         description: OK
  */
 app.get('/query12', async (req, res) => {
     /** Query 12: Propietarios sin consultas registradas en el último año*/
@@ -616,28 +616,36 @@ const validatePropietario = (req, res, next) => {
 /**
  * @swagger
  * /query13:
- * post:
- * summary: 13 Alta de Propietario (ABM).
- * requestBody:
- * required: true
- * content:
- * application/json:
- * schema:
- * type: object
- * properties:
- * id_propietario: { type: string }
- * nombre: { type: string }
- * apellido: { type: string }
- * dni: { type: number }
- * email: { type: string }
- * telefono: { type: number }
- * ciudad: { type: string }
- * provincia: { type: string }
- * responses:
- * 201:
- * description: Creado con éxito
- * 400:
- * description: Bad Request
+ *   post:
+ *     summary: 13 Alta de Propietario (ABM).
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_propietario:
+ *                 type: string
+ *               nombre:
+ *                 type: string
+ *               apellido:
+ *                 type: string
+ *               dni:
+ *                 type: number
+ *               email:
+ *                 type: string
+ *               telefono:
+ *                 type: number
+ *               ciudad:
+ *                 type: string
+ *               provincia:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Creado con éxito
+ *       400:
+ *         description: Bad Request
  */
 app.post('/query13', validatePropietario, async (req, res) => {
     // alta. 
@@ -670,28 +678,36 @@ app.post('/query13', validatePropietario, async (req, res) => {
 /**
  * @swagger
  * /query13:
- * put:
- * summary: 13 Modificación de datos de Propietario (ABM).
- * requestBody:
- * required: true
- * content:
- * application/json:
- * schema:
- * type: object
- * properties:
- * id_propietario: { type: string }
- * nombre: { type: string }
- * apellido: { type: string }
- * dni: { type: number }
- * email: { type: string }
- * telefono: { type: number }
- * ciudad: { type: string }
- * provincia: { type: string }
- * responses:
- * 200:
- * description: Modificado con éxito
- * 404:
- * description: Not Found
+ *   put:
+ *     summary: 13 Modificación de datos de Propietario (ABM).
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_propietario:
+ *                 type: string
+ *               nombre:
+ *                 type: string
+ *               apellido:
+ *                 type: string
+ *               dni:
+ *                 type: number
+ *               email:
+ *                 type: string
+ *               telefono:
+ *                 type: number
+ *               ciudad:
+ *                 type: string
+ *               provincia:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Modificado con éxito
+ *       404:
+ *         description: Not Found
  */
 app.put('/query13', validatePropietario, async (req, res) => {
     const { id_propietario, nombre, apellido, dni, email, telefono, ciudad, provincia } = req.body;
@@ -728,21 +744,22 @@ app.put('/query13', validatePropietario, async (req, res) => {
 /**
  * @swagger
  * /query13:
- * delete:
- * summary: 13 Baja lógica de Propietario (ABM).
- * requestBody:
- * required: true
- * content:
- * application/json:
- * schema:
- * type: object
- * properties:
- * id_propietario: { type: string }
- * responses:
- * 200:
- * description: Dado de baja con éxito
- * 404:
- * description: Not Found
+ *   delete:
+ *     summary: 13 Baja lógica de Propietario (ABM).
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_propietario:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: Dado de baja con éxito
+ *       404:
+ *         description: Not Found
  */
 app.delete('/query13', async (req, res) => {
     // baja logica: poner "activo" en false.
@@ -817,28 +834,38 @@ const validateConsulta = (req, res, next) => {
 /**
  * @swagger
  * /query14:
- * post:
- * summary: 14 Registro de nueva consulta médica con validación de paciente y veterinario.
- * requestBody:
- * required: true
- * content:
- * application/json:
- * schema:
- * type: object
- * properties:
- * id_consulta: { type: string }
- * id_paciente: { type: string }
- * id_vet: { type: string }
- * fecha: { type: string, format: date, example: "2026-06-03" }
- * motivo: { type: string }
- * diagnostico: { type: string }
- * costo: { type: number }
- * estado: { type: string }
- * responses:
- * 201:
- * description: Consulta registrada con éxito
- * 400:
- * description: Bad Request
+ *   post:
+ *     summary: 14 Registro de nueva consulta médica con validación de paciente y veterinario.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               id_consulta:
+ *                 type: string
+ *               id_paciente:
+ *                 type: string
+ *               id_vet:
+ *                 type: string
+ *               fecha:
+ *                 type: string
+ *                 format: date
+ *                 example: "2026-06-03"
+ *               motivo:
+ *                 type: string
+ *               diagnostico:
+ *                 type: string
+ *               costo:
+ *                 type: number
+ *               estado:
+ *                 type: string
+ *     responses:
+ *       201:
+ *         description: Consulta registrada con éxito
+ *       400:
+ *         description: Bad Request
  */
 app.post('/query14', validateConsulta, async (req, res) => {
     const {id_consulta, id_paciente, id_vet, fecha, motivo, diagnostico, costo, estado} = req.body;
@@ -904,29 +931,31 @@ const validateStockDecrement = (req, res, next) => {
 /**
  * @swagger
  * /query15:
- * put:
- * summary: 15 Actualización masiva del stock (decrementar unidades tras una consulta).
- * requestBody:
- * required: true
- * content:
- * application/json:
- * schema:
- * type: object
- * properties:
- * productos:
- * type: array
- * items:
- * type: object
- * properties:
- * id_producto: { type: string }
- * cantidad: { type: number }
- * responses:
- * 200:
- * description: Stock actualizado de forma masiva con éxito
- * 400:
- * description: Bad Request o Stock Insuficiente
- * 404:
- * description: Not Found
+ *   put:
+ *     summary: 15 Actualización masiva del stock (decrementar unidades tras una consulta).
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               productos:
+ *                 type: array
+ *                 items:
+ *                   type: object
+ *                   properties:
+ *                     id_producto:
+ *                       type: string
+ *                     cantidad:
+ *                       type: number
+ *     responses:
+ *       200:
+ *         description: Stock actualizado de forma masiva con éxito
+ *       400:
+ *         description: Bad Request o Stock Insuficiente
+ *       404:
+ *         description: Not Found
  */
 app.put('/query15', validateStockDecrement, async (req, res) => {
     const { productos } = req.body;
