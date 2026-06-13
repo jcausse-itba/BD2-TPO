@@ -36,8 +36,8 @@ module.exports = (app, cassandraClient, KEYSPACE) => {
                     diagnostico: 1,
                     costo: 1,
                     estado: 1,
-                    especialidad: "veterinario.especialidad",
-                    nombre: "veterinario.nombre"
+                    especialidad: "$veterinario.especialidad",
+                    nombre: "$veterinario.nombre"
                 }
             }
         ]).toArray());
