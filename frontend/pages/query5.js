@@ -24,6 +24,7 @@ export default async function init(container) {
     try {
         const data = await api.query5();
         renderTable(tableEl, data, [
+            { key: 'veterinario.id_vet', label: 'ID Veterinario' },
             { key: 'veterinario.nombre', label: 'Nombre' },
             { key: 'veterinario.especialidad', label: 'Especialidad' },
             { key: 'veterinario.sucursal', label: 'Sucursal' },

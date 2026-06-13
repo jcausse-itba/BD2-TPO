@@ -24,7 +24,9 @@ export default async function init(container) {
     try {
         const data = await api.query8();
         renderTable(tableEl, data, [
+            { key: 'id_producto', label: 'ID Producto' },
             { key: 'nombre', label: 'Producto' },
+            { key: 'categoria', label: 'Categoria'},
             {
                 key: 'unidades', label: 'Unidades',
                 render: v => {
@@ -33,6 +35,8 @@ export default async function init(container) {
                     return badge(String(v), variant);
                 },
             },
+            { key: 'precio_unit', label: 'Precio Unitario'},
+            { key: 'vencimiento', label: 'Vencimiento'},
             { key: 'proveedor', label: 'Proveedor' },
         ]);
     } catch (err) {
