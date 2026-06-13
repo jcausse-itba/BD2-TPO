@@ -23,12 +23,14 @@ module.exports = (app, cassandraClient, KEYSPACE) => {
                 }
             },
             {
-                _id: 0,
-                fecha: 1,
-                motivo: 1,
-                diagnostico: 1,
-                costo: 1,
-                estado: 1
+                projection: {
+                    _id: 0,
+                    fecha: 1,
+                    motivo: 1,
+                    diagnostico: 1,
+                    costo: 1,
+                    estado: 1
+                }
             }
         ).toArray());
     });
