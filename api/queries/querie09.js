@@ -29,7 +29,10 @@ module.exports = (app, cassandraClient, KEYSPACE) => {
                     motivo: 1,
                     diagnostico: 1,
                     costo: 1,
-                    estado: 1
+                    estado: 1,
+                    id_consulta: 1,
+                    id_paciente: 1,
+                    id_vet: 1,
                 }
             }
         ).toArray());
