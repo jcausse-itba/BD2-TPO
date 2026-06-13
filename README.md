@@ -4,38 +4,43 @@
 <h1 align="center">Base de Datos 2</h1>
 <h2 align="center">Trabajo Práctico Obligatorio</h2>
 
+Fecha de entrega: 12/Junio/2026
+
 ## Grupo 10
 
 * **61105**: **Causse**, Juan Ignacio
 * **64332**: **Liu**, Javier
 * **64292**: **Rivas**, Nicolás
 
-## Documentos Importantes
+## 📚 Documentos Importantes 📚
 
-## 🛠️ Instrucciones de ejecución 🛠️
+En el directorio `docs` se encuentran los siguientes documentos:
 
-Para ejecutar el proyecto es necesario contar con [Docker Engine](https://docs.docker.com/engine/install/) y [Docker Compose](https://docs.docker.com/compose/install/) instalados.
+* [`Enunciado.pdf`](./docs/Enunciado.pdf) - Enunciado del trabajo práctico.
+* [`Informe.pdf`](./docs/Informe.pdf) - Informe de entrega.
+* [`docker-compose.md`](./docs/docker-compose.md) - Documentación de la arquitectura en Docker Compose.
 
-Una vez instalados, ejecutar el siguiente comando en la raíz del proyecto:
+## 🌐 Rutas 🌐
+
+A continuación se detallan los servicios disponibles, sus rutas y puertos.
+
+Servicio                 | Ruta                                           | Puerto
+-------------------------|------------------------------------------------|--------
+Frontend                 | `/`                                            | 8080   
+Documentación Swagger    | `/api-docs`                                    | 3000   
+
+## 🛠️ Construcción y Ejecución 🛠️
+
+Para construir y ejecutar el proyecto es necesario contar con [Docker Engine](https://docs.docker.com/engine/install/) y [Docker Compose](https://docs.docker.com/compose/install/) instalados.
+
+Una vez instalados, se puede construir y ejecutar el proyecto ejecutando el siguiente comando en la raíz del proyecto:
 
 ```bash
 docker compose up -d --build
 ```
 
-## 🐋 Docker Compose 🐋
+Una vez finalizada la ejecución, se puede detener el proyecto y eliminar los volúmenes ejecutando el siguiente comando en la raíz del proyecto:
 
-Docker Compose es utilizado para orquestar los siguientes contenedores, _networks_ y volúmenes:
-
-Contenedores:
-* **bd2-tpo-g10-cassandra**: Apache Cassandra.
-* **bd2-tpo-g10-cassandra-init**: Script de inicialización de Cassandra. Se detendrá automáticamente luego de completar la inicialización.
-* **bd2-tpo-g10-mongo**: MongoDB.
-* **bd2-tpo-g10-api**: API con Express.js.
-* **bd2-tpo-g10-frontend**: Frontend con servidor NGINX.
-
-_Networks_:
-* **bd2-tpo_default**: Network que permite la comunicación entre todos los contenedores.
-
-Volúmenes:
-* **cassandra_data**: Volumen que persiste los datos de Cassandra.
-* **mongo_data**: Volumen que persiste los datos de MongoDB.
+```bash
+docker compose down -v
+```
