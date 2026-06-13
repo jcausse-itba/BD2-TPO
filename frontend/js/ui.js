@@ -58,44 +58,54 @@ export function renderTable(container, data, showIdsDefault, columns) {
         return;
     }
 
+    const hasIdColumns = columns.some(c => c.key.split('.').pop().startsWith('id_'));
+
     const cardHeader = container.previousElementSibling;
     let showIds = showIdsDefault;
 
     if (cardHeader && cardHeader.classList.contains('card__header')) {
         let toggleLabel = cardHeader.querySelector('.id-toggle-label');
-        if (!toggleLabel) {
-            toggleLabel = document.createElement('label');
-            toggleLabel.className = 'toggle-switch id-toggle-label';
+        
+        if (hasIdColumns) {
+            if (!toggleLabel) {
+                toggleLabel = document.createElement('label');
+                toggleLabel.className = 'toggle-switch id-toggle-label';
 
-            const checkbox = document.createElement('input');
-            checkbox.type = 'checkbox';
-            checkbox.checked = showIdsDefault;
-            checkbox.className = 'toggle-switch__checkbox id-toggle-checkbox';
+                const checkbox = document.createElement('input');
+                checkbox.type = 'checkbox';
+                checkbox.checked = showIdsDefault;
+                checkbox.className = 'toggle-switch__checkbox id-toggle-checkbox';
 
-            const slider = document.createElement('span');
-            slider.className = 'toggle-switch__slider';
+                const slider = document.createElement('span');
+                slider.className = 'toggle-switch__slider';
 
-            const text = document.createElement('span');
-            text.className = 'toggle-switch__text';
-            text.textContent = 'Mostrar Identificadores';
+                const text = document.createElement('span');
+                text.className = 'toggle-switch__text';
+                text.textContent = 'Mostrar Identificadores';
 
-            toggleLabel.appendChild(checkbox);
-            toggleLabel.appendChild(slider);
-            toggleLabel.appendChild(text);
+                toggleLabel.appendChild(checkbox);
+                toggleLabel.appendChild(slider);
+                toggleLabel.appendChild(text);
 
-            const badge = cardHeader.querySelector('.badge');
-            if (badge) {
-                cardHeader.insertBefore(toggleLabel, badge);
+                const badge = cardHeader.querySelector('.badge');
+                if (badge) {
+                    cardHeader.insertBefore(toggleLabel, badge);
+                } else {
+                    cardHeader.appendChild(toggleLabel);
+                }
+
+                checkbox.addEventListener('change', (e) => {
+                    renderTableHTML(container, data, e.target.checked, columns);
+                });
             } else {
-                cardHeader.appendChild(toggleLabel);
+                toggleLabel.style.display = 'inline-flex';
+                const checkbox = toggleLabel.querySelector('.id-toggle-checkbox');
+                if (checkbox) showIds = checkbox.checked;
             }
-
-            checkbox.addEventListener('change', (e) => {
-                renderTableHTML(container, data, e.target.checked, columns);
-            });
         } else {
-            const checkbox = toggleLabel.querySelector('.id-toggle-checkbox');
-            if (checkbox) showIds = checkbox.checked;
+            if (toggleLabel) {
+                toggleLabel.style.display = 'none';
+            }
         }
     }
 

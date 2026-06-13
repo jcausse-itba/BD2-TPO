@@ -24,7 +24,7 @@ export default async function init(container) {
     try {
         const data = await api.query11();
         renderTable(tableEl, data, true, [
-            { key: 'id_vet', label: 'ID de Veterinario' },
+            { key: 'id_vet', label: 'ID Veterinario' },
             { key: 'nombre', label: 'Nombre' },
             { key: 'apellido', label: 'Apellido' },
             { key: 'sucursal', label: 'Sucursal' },
@@ -36,4 +36,3 @@ export default async function init(container) {
         showToast(err.message, 'error');
     }
 }
-

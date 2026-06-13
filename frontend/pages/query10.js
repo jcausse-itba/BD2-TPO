@@ -51,7 +51,7 @@ export default async function init(container) {
         try {
             const data = await api.query10(sucursal);
             renderTable(tableEl, data, true, [
-                { key: 'id_paciente', label: 'ID' },
+                { key: 'id_paciente', label: 'ID Paciente' },
                 { key: 'nombre', label: 'Nombre' },
                 { key: 'especie', label: 'Especie' },
                 { key: 'raza', label: 'Raza' },
