@@ -13,7 +13,7 @@ export default async function init(container) {
         <div class="card">
             <div class="card__header">
                 <span class="card__title">Resultados</span>
-                <span class="badge badge--danger">Atención</span>
+                <span class="badge badge--primary">MongoDB</span>
             </div>
             <div class="card__body card__body--flush" id="q6-table"></div>
         </div>`;
@@ -33,4 +33,3 @@ export default async function init(container) {
         showToast(err.message, 'error');
     }
 }
-
