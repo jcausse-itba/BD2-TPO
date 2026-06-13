@@ -25,6 +25,21 @@ module.exports = (app, cassandraClient, KEYSPACE) => {
             {
                 $match: {estado: "Seguimiento"}
             },
+            {
+                $project: {
+                    _id: 0,
+                    id_consulta: 1,
+                    id_paciente: 1,
+                    id_vet: 1,
+                    fecha: 1,
+                    motivo: 1,
+                    diagnostico: 1,
+                    costo: 1,
+                    estado: 1,
+                    especialidad: "veterinario.especialidad",
+                    nombre: "veterinario.nombre"
+                }
+            }
         ]).toArray());
     })
 }
