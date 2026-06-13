@@ -101,14 +101,21 @@ module.exports = (app, cassandraClient, KEYSPACE) => {
                 updateQueries.push({
                     query: `UPDATE "${KEYSPACE}".stock_farmaceutico
                             SET unidades = ?
-                            WHERE id_producto = ?;`,
-                    params: [nuevasUnidades, productos[i].id_producto]
+                            WHERE id_producto = ?
+                                IF unidades = ?;`,
+                    params: [nuevasUnidades, productos[i].id_producto, selectResults[i].rows[0].unidades]
                 });
             }
 
-            await Promise.all(updateQueries.map(q =>
+            const updateResults = await Promise.all(updateQueries.map(q =>
                 cassandraClient.execute(q.query, q.params, {prepare: true})
             ));
+
+            if (updateResults.some(res => !res.rows[0]['[applied]'])) {
+                return res.status(409).json({
+                    error: "Conflict: El stock fue modificado por otra transacción. Intente nuevamente."
+                });
+            }
 
             res.status(200).json({
                 message: "Stock actualizado de forma masiva con éxito."
