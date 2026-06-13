@@ -46,7 +46,7 @@ const api = Object.freeze({
     /* ── Read-only queries (GET) ─────────────────── */
     query1:  ()              => request('/query1'),
     query2:  ()              => request('/query2'),
-    query3:  ()              => request('/query3'),
+    query3:  (id_paciente)   => request(`/query3?id_paciente=${encodeURIComponent(id_paciente)}`),
     query4:  ()              => request('/query4'),
     query5:  ()              => request('/query5'),
     query6:  ()              => request('/query6'),
