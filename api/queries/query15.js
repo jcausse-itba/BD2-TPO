@@ -113,7 +113,7 @@ module.exports = (app, cassandraClient, KEYSPACE) => {
 
             if (updateResults.some(res => !res.rows[0]['[applied]'])) {
                 return res.status(409).json({
-                    error: "Conflict: El stock fue modificado por otra transacción. Intente nuevamente."
+                    error: "Conflicto: El stock fue actualizado de forma parcial."
                 });
             }
 
