@@ -50,7 +50,7 @@ export default async function init(container) {
         showLoading(tableEl);
         try {
             const data = await api.query10(sucursal);
-            renderTable(tableEl, data, [
+            renderTable(tableEl, data, true, [
                 { key: 'id_paciente', label: 'ID' },
                 { key: 'nombre', label: 'Nombre' },
                 { key: 'especie', label: 'Especie' },
@@ -69,3 +69,4 @@ export default async function init(container) {
     btn.addEventListener('click', search);
     input.addEventListener('keydown', e => { if (e.key === 'Enter') search(); });
 }
+

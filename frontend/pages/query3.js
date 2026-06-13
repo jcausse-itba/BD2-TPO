@@ -50,7 +50,7 @@ export default async function init(container) {
         showLoading(tableEl);
         try {
             const data = await api.query3(id_paciente);
-            renderTable(tableEl, data, [
+            renderTable(tableEl, data, true, [
                 { key: 'fecha', label: 'Fecha' },
                 {
                     key: 'tipo', label: 'Tipo',
@@ -72,3 +72,4 @@ export default async function init(container) {
     btn.addEventListener('click', search);
     input.addEventListener('keydown', e => { if (e.key === 'Enter') search(); });
 }
+

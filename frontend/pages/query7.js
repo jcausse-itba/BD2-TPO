@@ -23,7 +23,7 @@ export default async function init(container) {
 
     try {
         const data = await api.query7();
-        renderTable(tableEl, data, [
+        renderTable(tableEl, data, true, [
             { key: 'diagnostico', label: 'Diagnóstico' },
             { key: 'cantidad', label: 'Cantidad' },
         ]);
@@ -32,3 +32,4 @@ export default async function init(container) {
         showToast(err.message, 'error');
     }
 }
+

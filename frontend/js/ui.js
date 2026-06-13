@@ -45,9 +45,10 @@ export function showToast(message, type = 'info', duration = 3500) {
  *
  * @param {HTMLElement} container — element to populate
  * @param {Array<Object>} data
+ * @param {boolean} showIdsDefault — default state for showing 'id_' columns
  * @param {Array<{key: string, label: string, render?: (val, row) => string}>} columns
  */
-export function renderTable(container, data, columns) {
+export function renderTable(container, data, showIdsDefault, columns) {
     if (!data || data.length === 0) {
         container.innerHTML = `
             <div class="state-message">
@@ -57,9 +58,58 @@ export function renderTable(container, data, columns) {
         return;
     }
 
-    const ths = columns.map(c => `<th>${escapeHTML(c.label)}</th>`).join('');
+    const cardHeader = container.previousElementSibling;
+    let showIds = showIdsDefault;
+
+    if (cardHeader && cardHeader.classList.contains('card__header')) {
+        let toggleLabel = cardHeader.querySelector('.id-toggle-label');
+        if (!toggleLabel) {
+            toggleLabel = document.createElement('label');
+            toggleLabel.className = 'toggle-switch id-toggle-label';
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.checked = showIdsDefault;
+            checkbox.className = 'toggle-switch__checkbox id-toggle-checkbox';
+
+            const slider = document.createElement('span');
+            slider.className = 'toggle-switch__slider';
+
+            const text = document.createElement('span');
+            text.className = 'toggle-switch__text';
+            text.textContent = 'Mostrar Identificadores';
+
+            toggleLabel.appendChild(checkbox);
+            toggleLabel.appendChild(slider);
+            toggleLabel.appendChild(text);
+
+            const badge = cardHeader.querySelector('.badge');
+            if (badge) {
+                cardHeader.insertBefore(toggleLabel, badge);
+            } else {
+                cardHeader.appendChild(toggleLabel);
+            }
+
+            checkbox.addEventListener('change', (e) => {
+                renderTableHTML(container, data, e.target.checked, columns);
+            });
+        } else {
+            const checkbox = toggleLabel.querySelector('.id-toggle-checkbox');
+            if (checkbox) showIds = checkbox.checked;
+        }
+    }
+
+    renderTableHTML(container, data, showIds, columns);
+}
+
+function renderTableHTML(container, data, showIds, columns) {
+    const activeColumns = showIds 
+        ? columns 
+        : columns.filter(c => !c.key.split('.').pop().startsWith('id_'));
+
+    const ths = activeColumns.map(c => `<th>${escapeHTML(c.label)}</th>`).join('');
     const trs = data.map(row => {
-        const tds = columns.map(c => {
+        const tds = activeColumns.map(c => {
             const raw = getNestedValue(row, c.key);
             const rendered = c.render ? c.render(raw, row) : escapeHTML(String(raw ?? ''));
             return `<td>${rendered}</td>`;
