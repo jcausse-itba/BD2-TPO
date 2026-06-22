@@ -4,7 +4,8 @@
 <h1 align="center">Base de Datos 2</h1>
 <h2 align="center">Trabajo Práctico Obligatorio</h2>
 
-Fecha de entrega: 12/Junio/2026
+* Fecha de entrega: 12/Junio/2026
+* Fecha de defensa: 22/Junio/2026
 
 ## Grupo 10
 
@@ -19,6 +20,7 @@ En el directorio `docs` se encuentran los siguientes documentos:
 * [`Enunciado.pdf`](./docs/Enunciado.pdf) - Enunciado del trabajo práctico.
 * [`Informe.pdf`](./docs/Informe.pdf) - Informe de entrega.
 * [`docker-compose.md`](./docs/docker-compose.md) - Documentación de la arquitectura en Docker Compose.
+* [`Defensa.pdf`](./docs/Defensa.pdf) - Presentación utilizada en la defensa oral del TPO.
 
 ## 🌐 Rutas 🌐
 
